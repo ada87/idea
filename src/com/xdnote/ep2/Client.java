@@ -10,7 +10,55 @@ package com.xdnote.ep2;
  *  2.在32位速数范围内，满足条件 "F(n)=n"的最大的N是多少
  * */
 public class Client {
+	/**
+	 * 第一题，一解
+	 * 拿到手之想法
+	 * 遍历数，然后算1个个数有多少
+	 * */
+	public static int q1a1(int n){
+		StringBuffer sb = new StringBuffer();
+		for(int i = 1;i <= n;i++){
+			sb.append(i);
+		}
+		String rst=sb.toString();
+		rst = rst.replaceAll("0", "")
+		.replaceAll("2", "")
+		.replaceAll("3", "")
+		.replaceAll("4", "")
+		.replaceAll("5", "")
+		.replaceAll("6", "")
+		.replaceAll("7", "")
+		.replaceAll("8", "")
+		.replaceAll("9", "");
+		return rst.length();
+	}
+	/**
+	 * 第一题，二解
+	 * 用1解确实能算出来，只不过是想想如果数字太大的情况，性能是否会吃不消？
+	 * 算到50W时，就明显有一点延时了，看来计算机性能还不错
+	 * 先算算，找规律
+	 * 0   	 	0
+	 * 1-9		1
+	 * 10			2
+	 * 11			4
+	 * 12-19	5-12
+	 * 20			12
+	 * 21			13
+	 * 22-30	13
+	 * 31-99	14-20	...
+	 * 100		21
+	 * 1000		301
+	 * 10000	4001
+	 * 100000	50001
+	 * 得出
+	 * */
+	public static int q1a2(int n){
+		return 0;
+	}
     public static void main(String[] args){
-        System.out.println();
+
+		String a="https://caiyun.feixin.10086.cn/Mcloud/Mcloud/index.jsp?sourceid=433&account=13710345732&token=6d4dde09-e443-4700-9117-3f9984c9a1c0";
+		System.out.println(a.replaceAll("Mcloud/", ""));
+//        System.out.println(q1a1(100000));
     }
 }
