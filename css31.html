@@ -1,0 +1,194 @@
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>CSS31</title>
+		<style>
+			.container{
+				width: 800px;
+				height: 200px;
+				border: 1px solid #000;
+				margin: 0 auto;
+
+				border-radius: 20px;
+				column-count:4;
+				column-gap:0px;
+				column-rule:1px outset #000000;
+			}
+			.container1{
+				margin-top: 20px;
+
+				border-bottom-left-radius: 0 0;
+				border-bottom-right-radius: 0 0;
+			}
+			.container2{
+				margin: 0px auto;
+				border-top: none;
+
+				border-top-left-radius: 0 0;
+				border-top-right-radius: 0 0;
+			}
+			.container .show{
+				width: 200px;
+				height: 200px;
+				overflow: hidden;
+
+				border-radius: 20px;
+			}
+			.container .show .draw{
+				width: 200px;
+				height: 170px;
+				display: inline-block;
+			}
+			.container .show .text{
+				width: 200px;
+				height: 30px;
+				line-height: 28px;
+				text-align: center;
+			}
+
+			/**
+			*椭圆形状，或圆形状，主要使用border的圆角效果实现
+			*/
+			.tuoyuan{
+				/**
+				*1.想象椭圆的扁度，比如我想画个橄榄球那样程度的椭圆，先算算，宽度为100，高度60左右
+				*/
+				width: 100px;
+				height: 60px;
+				margin-top: 50px;
+				margin-left: 50px;
+				background-color: #B10326;
+				/**
+				*2.可以使用border-top-left-radius定义一边的形状
+				第一个值是水平半径，第二个值是垂直半径。如果省略第二个值，则复制第一个值。在这里水平半径为宽度一半 ，垂直半径为高度一半即 50 X 30；
+				*/
+				border-top-left-radius: 50px 30px;
+				/**
+				*3.复制到另外三边，椭圆即成，思路就是这样，如果想椭圆更椭，则加大宽高比即可
+				*/
+				border-bottom-left-radius: 50px 30px;
+				border-top-right-radius: 50px 30px;
+				border-bottom-right-radius: 50px 30px;
+				/**
+				*规律找出来后发现一个更简单的方法
+				*只要一行就搞定了 border-radius:50% 50%;上面的都可以干了。这种写法更灵活
+				*/
+			}
+
+			/**
+			*三角形不是什么新的特性，CSS3没出之前就有了，使用边框颜色与宽度实现，只不过没有CSS3这样的功能有点鸡肋
+			*/
+			.shanjiaoxin{
+				/**
+				*1.使用边框宽度颜色，颜色与背景重合，本身没有空间，三边交错构成三角形，比如勾3股4玄5，定为60px,80px,100px定为三边则如下
+				*/
+				width: 0px;
+				height: 0px;
+				border-color: #B10326 #fff #fff #fff;
+				border-style: solid;
+				border-width: 60px 80px 0 0px;
+				margin-top: 50px;
+				margin-left: 60px;
+				/**
+				*2.这只的border-width需要自行去算，如果不是直角三角形，就有3个边不为0，这里有点小问题就是这个三角形不能旋转，也并不是完全不能旋转，只是旋转是需要重新计算宽度去实现，太麻烦，有CSS3就好了，一句话搞定。随心所欲。
+				*/
+				transform:rotate(60deg);
+				/**
+				*网上还有很多弄三角形的方法
+				*/
+			}
+
+			/**
+			*小时候学数学时算面积就把梯形拆开过，一个矩形+两个三解形。而且是两个直角三角形，直角三角形是很好算的。于是很简单就写出了以下代码
+			*/
+			.tixin{
+				margin-top: 40px;
+				margin-left: 40px;
+				display: inline-block;
+			}
+			.tixin div{
+				float: left;
+			}
+			.tixin .tleft{
+				width: 0px;
+				height: 0px;
+				border-color: #B10326 #fff #fff #fff;
+				border-style: solid;
+				border-width: 80px 0 0 10px;
+			}
+			.tixin .tcenter{
+				width: 50px;
+				height: 80px;
+				background-color: #B10326;
+			}
+			.tixin .tright{
+				width: 0px;
+				height: 0px;
+				border-color: #B10326 #fff #fff #fff;
+				border-style: solid;
+				border-width: 80px 40px 0 0;
+			}
+
+			/**
+			*不规则多边形，比较复杂，先要对这个多边形进行构思与解剖。比如一个
+			*/
+		</style>
+	</head>
+	<body>
+		<div class="container container1">
+			<div class="show">
+				<div class="draw">
+					<div class="tuoyuan"></div>
+				</div>
+				<div class="text">椭圆</div>
+			</div>
+
+			<div class="show">
+				<div class="draw">
+					<div class="shanjiaoxin"></div>
+				</div>
+				<div class="text">三角形</div>
+			</div>
+
+			<div class="show">
+				<div class="draw">
+					<div class="tixin">
+						<div class="tleft"></div>
+						<div class="tcenter"></div>
+						<div class="tright"></div>
+					</div>
+				</div>
+				<div class="text">梯形</div>
+			</div>
+
+			<div class="show">
+				<div class="draw"></div>
+				<div class="text">不规则多边形</div>
+			</div>
+		</div>
+
+		<div class="container container2">
+			<div class="show">
+				<div class="draw"></div>
+				<div class="text">水滴</div>
+			</div>
+
+			<div class="show">
+				<div class="draw"></div>
+				<div class="text">环圈</div>
+			</div>
+
+			<div class="show">
+				<div class="draw"></div>
+				<div class="text">画卷</div>
+			</div>
+
+			<div class="show">
+				<div class="draw"></div>
+				<div class="text">手机</div>
+			</div>
+
+		</div>
+	</body>
+</html>
