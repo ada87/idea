@@ -1,0 +1,57 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>css3 simple graph</title>
+		<style>
+		.liujiaoxing {
+		    width: 0;
+		    height: 0;
+		    border-left: 50px solid transparent;
+		    border-right: 50px solid transparent;
+		    border-bottom: 100px solid red;
+		    position: relative;
+		}
+		.liujiaoxing:after {
+		    width: 0;
+		    height: 0;
+		    border-left: 50px solid transparent;
+		    border-right: 50px solid transparent;
+		    border-top: 100px solid red;
+		    position: absolute;
+		    content: "";
+		    top: 30px;
+		    left: -50px;
+		}
+
+#burst-12 {
+    background: red;
+    width: 80px;
+    height: 80px;
+    position: relative;
+    text-align: center;
+}
+
+#burst-12:before, #burst-12:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 80px;
+    width: 80px;
+    background: red;
+}
+
+#burst-12:before {
+transform: rotate(30deg);
+}
+
+#burst-12:after {
+transform: rotate(60deg);
+}
+
+		</style>
+	</head>
+	<body>
+		<div id="burst-12"></div>
+	</body>
+</html>
