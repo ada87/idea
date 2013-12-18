@@ -2,7 +2,7 @@
 
 	<head>
 		<meta charset="utf-8" />
-		<title>IE11上让滚动条透明并自动隐藏</title>
+		<title>IE10+/Wp手机 上让滚动条透明并自动隐藏</title>
 		<style>
 		@-webkit-viewport {
 		 width: device-width;
@@ -24,28 +24,28 @@
 		}
 		div,div:before,div:after{
 			width: 100%;
-			height: 200px;
+			height: 300px;
 			display: block;
-			border-top: 200px solid red;
-			border-bottom: 200px solid green;
+			border-top: 300px solid red;
+			border-bottom: 300px solid green;
 			background-color: yellow;
 			position: absolute;
 			text-align: center;
-			line-height: 200px;
+			line-height: 300px;
 		}
 		div:before{
-			margin-top: 400px;
-			content: "这是一个效果，注意左边的滚动条";
-			border-top: 200px solid blue;
-			border-bottom: 200px solid silver;
+			margin-top: 600px;
+			content: "这是一个效果，注意右边的滚动条";
+			border-top: 300px solid blue;
+			border-bottom: 300px solid silver;
 			background-color: black;
 			color: white;
 		}
 		div:after{
-			margin-top: 1000px;
+			margin-top: 1500px;
 			content: "想知道怎么实现话，你肯定知道怎么看的";
-			border-top: 200px solid aqua;
-			border-bottom: 200px solid orange;
+			border-top: 300px solid aqua;
+			border-bottom: 300px solid orange;
 			background-color: gold;
 			color: red;
 		}
