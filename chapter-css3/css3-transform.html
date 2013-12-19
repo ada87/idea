@@ -29,7 +29,7 @@
 #target{
 	float: left;
 	margin: 200px 150px;
-	width:180px;
+	width:200px;
 	height:60px;
 	background: linear-gradient(90deg,orange,green);
 	background: -moz-linear-gradient(90deg, green, yellow);
@@ -37,6 +37,7 @@
 	border:1px solid black;
 	/**这里说明一下，多个transform用空格分开，本DEMO就不做判断直接覆盖了，如果要多个效果同时用就在JS里面多判断一下吧**/
 	transform:rotate(20deg) scale(2);
+	transition: all 1s;
 }
 </style>
 
@@ -98,27 +99,30 @@ function skewY(value){
 <div class="container">
 <div class="crotrol">
 <ul>
+<li>旋转</li>
 <li>rotate <input type="range" min="0" max="360" onchange="rotate(this.value)" /></li>
 <li>rotateX <input type="range" min="0" max="360" onchange="rotateX(this.value)" /></li>
 <li>rotateY <input type="range" min="0" max="360" onchange="rotateY(this.value)" /></li>
 <li>rotateZ  <input type="range" min="0" max="360" onchange="rotateZ(this.value)" /></li>
-<li></li>
+<li>移动</li>
 <li>translateX  <input type="range" min="-100" max="100" onchange="translateX(this.value)" /></li>
 <li>translateY  <input type="range" min="-100" max="100" onchange="translateY(this.value)" /></li>
 <li>translateZ  <input type="range" min="-100" max="100" onchange="translateZ(this.value)" /></li>
-<li></li>
+<li>缩放</li>
 <li>scale  <input type="range" min="0" max="5" value="1" step="0.1" onchange="scale(this.value)" /></li>
 <li>scaleX  <input type="range" min="0" max="5" value="1" step="0.1" onchange="scaleX(this.value)" /></li>
 <li>scaleY  <input type="range" min="0" max="5" value="1" step="0.1" onchange="scaleY(this.value)" /></li>
 <li>scaleZ  <input type="range" min="0" max="5" value="1" step="0.1" onchange="scaleZ(this.value)" /></li>
-<li></li>
+<li>倾斜</li>
 <li>skewX  <input type="range" min="-360" max="360" onchange="skewX(this.value)" /></li>
 <li>skewY  <input type="range" min="-360" max="360" onchange="skewY(this.value)" /></li>
+<li>也可以使用matrix混合这四种属性</li>
+
 </ul>
 </div>
-<div id="target">基础知识，不多解释，参考网上CSS3手册，或看本页面源码。</div>
+<div id="target">基础知识，不多解释，参考网上CSS3手册，或看本页面源码。适合做各种特效。</div>
 </div>
-
+<p></p>
 
 </body>
 </html>
