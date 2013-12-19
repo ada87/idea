@@ -27,7 +27,7 @@
         str+=debug(obj[i],space)
       }else if(typeof(obj[i])!='function'){
         for(var x=0;x&lt;level;x++){
-          str+='&nbsp;&nbsp;&nbsp;&nbsp;';
+          str+='&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;';
         }
         str+=i;
         str+=":";
@@ -51,7 +51,7 @@
         str+=i;
         str+='<br />';
         str+=debug(obj[i],space)
-      }else if(typeof(obj[i])!='function'){
+      }else if(typeof(obj[i])=='function'){
         for(var x=0;x<level;x++){
           str+='&nbsp;&nbsp;&nbsp;&nbsp;';
         }
@@ -65,5 +65,13 @@
   }
   document.getElementById('results').innerHTML=debug(Modernizr,0);
 </script>
+
+      addTest ( feature, test ) 
+      mq( mq ) 
+      hasEvent isEventSupported( eventName, element ) 
+      testProp(prop)
+      testAllProps( prop, prefixed, elem )
+      testStyles( rule, callback, nodes, testnames )
+      prefixed(prop, obj, elem)
 </body>
 </html>
