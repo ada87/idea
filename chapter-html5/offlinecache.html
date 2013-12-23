@@ -17,21 +17,32 @@
 	<p>
 		HTML5之离线缓存说明，本页面由一个html和几个js/css成，离线应用主要可以做一些本地性较强的APP，如游戏、小工具等，或是离线程序如news,docs等，还可以给用于网站的加速，加快客户端打开速度，减小服务器端处理的请求量。
 	</p>
+	<p>
+	</p>
 	<pre><code>
 步骤一：加入缓存appcache文件 manifest，并创建这个文件
 &lt;html manifest="offlinecache.appcache"&gt;
 
-步骤二：编辑这个文件 第一行写死为“CACHE MANIFEST”
+步骤二：编辑这个文件 第一行写为"CACHE MANIFEST"
 CACHE MANIFEST
 
-步骤三：加入想要缓存资源列表
+步骤三：加入想要缓存资源列表 （每行一个）
 ../stylesheets/stylesheet.css
 ../javascripts/jquery.min.js
 ../javascripts/script.js
+
+其它语法说明：
+#  "#" 为 注释
+#  "*" 为 任意链接  
+#  除了  "CACHE MANIFEST" 外，还有"NETWORK:"为不使用缓存的 "FALLBACK:"为使用缓存失败的场景
+#  与"CACHE MANIFEST"一样，独占一行，后面根对应的资源，一行一行
 	</code>
 	</pre>
 	<p>
-		离线缓存一般与本地数据库一同使用，上线时可以同步数据等。
+		比如本页面，如果访问过一次，拨掉网线后也可以再次刷新访问，离线缓存一般与本地数据库一同使用，上线时可以同步数据等。
+	</p>
+	<p>
+		服务器端资源修改的话，必须更新manifest文件重新读取，比如在manifest文件里面放个版本号或时间戳什么的，每次资源更新就变一下。
 	</p>
 </div>
 </body>
