@@ -335,6 +335,10 @@
 				background-color: #000000;
 				transform: rotate(200deg);
 				clip:rect(60px, 60px, 120px, 0px);
+				/**
+				* clip参数说明一下，依次是 top,right,bottom,left，这个顺序十分不理解，可以先截图再填数。
+				* 召唤出截图工具后，你会先点一下，就是坐标(top,left)，再拉出一个矩形代表区域(right,bottom)，所以,top/left即代表参照坐标,right/bottom即代表拉的矩形选框的边长。
+				*/
 			}
 			/**其实做出来后发现使用clip的方式也并不太实用，可能我没找到好的算法吧。*/
 		</style>
