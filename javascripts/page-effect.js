@@ -3,15 +3,15 @@
 *使用方法一：直接嵌入
 * <script type="text/javascript" src="http://www.xdnote.com/javascripts/page-effect.js" ></script>
 *使用方法二：将以下脚本拖到书签，点
-javascript: void((function() {if(typeof pageEffect!='undefined')return;var element = document.createElement('script');element.charset = 'utf-8';element.setAttribute('src', 'http://test.xdnote.com/javascripts/page-effect.js');document.body.appendChild(element);})())
+javascript: void((function() {if(typeof pageEffect!='undefined'){pageEffect.stop;return};var element = document.createElement('script');element.charset = 'utf-8';element.setAttribute('src', 'http://test.xdnote.com/javascripts/page-effect.js');document.body.appendChild(element);})())
 */
 var pageEffect = (function(document,window,undefined){
 	'use strict';
-	var draw = null,
-		width = document.body.offsetWidth,
-		height = document.body.offsetHeight;
-
-	var the1data=[
+	var draw = null,							//canvas 2d 对象
+		width = document.body.offsetWidth,		//屏幕宽度	
+		height = document.body.offsetHeight,	//屏幕高度
+		stopevent = null;						//动画事件（停止）
+	var the1data=[								//特效需要的数据
 			{rgb : '0,0,128,' , offset : [ 0.5*width, 150, 30, 40], start:0.2, stop:0.5, step:0.01},
 			{rgb : '0,128,128,' , offset : [ 0.3*width, 200, 50, 50], start:0.1, stop:0.4, step:0.008},
 			{rgb : '128,0,128,' , offset : [ 0.4*width, 50, 40, 60], start:0.3, stop:0.8, step:0.007},
@@ -42,7 +42,9 @@ var pageEffect = (function(document,window,undefined){
 		drawCanvas();
 		animation(Date.now());
 	}
-
+	/**
+	* 绘制页面
+	*/
 	function drawCanvas(){
 		draw.clearRect(0,0,width,height);
 		for(var i = 0, j = the1data.length; i < j; i++){
@@ -69,8 +71,11 @@ var pageEffect = (function(document,window,undefined){
 	*/
 	function animation(){
 		drawCanvas();
-		window.requestAnimationFrame(animation);
+		stopevent=window.requestAnimationFrame(animation);
+	}
+	function stopanimation(){
+		window.cancelAnimationFrame(stopevent);
 	}
 	init();
-	return 'ok';
+	return {stop:stopanimation};
 })(document,window);
