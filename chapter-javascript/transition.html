@@ -1,0 +1,284 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <title>JS版  计算</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-JS版 transition 计算">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<div class="wrapper markdown-body">
+  <h1>JS版 transition 计算</h1>
+  <p>
+    CSS3的transition,很方便的用来制作动画,可惜无法用脚本控制,不能与画布兼容,于是根据网上的一些曲线效果写一个
+  </p>
+  
+<pre><code>//所有方法的参数一样,依次传入 目前的时间, 时间开始时的值, 时间结束时的值, 动画总时间
+//线性
+function linear(currentTime,start,stop,totalTime){
+  return stop * currentTime/totalTime + start;
+}
+//二次方 in
+function easing_in(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  return stop * currentTime*currentTime +start;
+}
+//二次方 out
+function easing_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  return start - stop * currentTime * (currentTime);
+}
+//二次方 先in后out
+function easing_in_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  if (currentTime &lt; 1) return stop/2*currentTime*currentTime + start;
+  currentTime--;
+  return -stop/2 * (currentTime*(currentTime-2) - 1) + start;
+}
+//三次方 in
+function cubic_in(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  return stop*currentTime*currentTime*currentTime + start;
+  
+}
+function cubic_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  currentTime--;
+  return stop*(currentTime*currentTime*currentTime + 1) + start;
+  
+}
+function cubic_in_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  if (currentTime &lt; 1) return stop/2*currentTime*currentTime*currentTime + start;
+  currentTime -= 2;
+  return stop/2*(currentTime*currentTime*currentTime + 2) + start;
+  
+}
+//四次方
+function quartic_in(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  return stop*currentTime*currentTime*currentTime*currentTime + start;
+  
+}
+function quartic_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  currentTime /= totalTime;
+  currentTime--;
+  return -stop * (currentTime*currentTime*currentTime*currentTime - 1) + start;
+  
+}
+function quartic_in_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime/2;
+  if (currentTime &lt; 1) return stop/2*currentTime*currentTime*currentTime*currentTime + start;
+  currentTime -= 2;
+  return -stop/2 * (currentTime*currentTime*currentTime*currentTime - 2) + start;
+  
+}
+//五次方
+function quintic_in(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  return stop*currentTime*currentTime*currentTime*currentTime*currentTime + start;
+  
+}
+function quintic_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  currentTime--;
+  return stop*(currentTime*currentTime*currentTime*currentTime*currentTime + 1) + start;
+  
+}
+function quintic_in_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime/2;
+  if (currentTime &lt; 1) return stop/2*currentTime*currentTime*currentTime*currentTime*currentTime + start;
+  currentTime -= 2;
+  return stop/2*(currentTime*currentTime*currentTime*currentTime*currentTime + 2) + start;
+  
+}
+//正弦线
+function sinusoidal_in(currentTime,start,stop,totalTime){
+  return -stop * Math.cos(currentTime/totalTime * (Math.PI/2)) + stop + start;
+  
+}
+function sinusoidal_out(currentTime,start,stop,totalTime){
+  return stop * Math.sin(currentTime/totalTime * (Math.PI/2)) + start;
+  
+}
+function sinusoidal_in_out(currentTime,start,stop,totalTime){
+  return -stop/2 * (Math.cos(Math.PI*currentTime/totalTime) - 1) + start;
+  
+}
+
+//指数线
+function exponential_in(currentTime,start,stop,totalTime){
+  return stop * Math.pow( 2, 10 * (currentTime/totalTime - 1) ) + start;
+  
+}
+function exponential_out(currentTime,start,stop,totalTime){
+  return stop * ( -Math.pow( 2, -10 * currentTime/totalTime ) + 1 ) + start;
+  
+}
+function exponential_in_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime/2;
+  if (currentTime &lt; 1) return stop/2 * Math.pow( 2, 10 * (currentTime - 1) ) + start;
+  currentTime--;
+  return stop/2 * ( -Math.pow( 2, -10 * currentTime) + 2 ) + start;
+  
+}
+
+//循环
+function circular_in(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  return -stop * (Math.sqrt(1 - currentTime*currentTime) - 1) + start;
+  
+}
+function circular_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  currentTime--;
+  return stop * Math.sqrt(1 - currentTime*currentTime) + start;
+  
+}
+function circular_in_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime/2;
+  if (currentTime &lt; 1) return -stop/2 * (Math.sqrt(1 - currentTime*currentTime) - 1) + start;
+  currentTime -= 2;
+  return stop/2 * (Math.sqrt(1 - currentTime*currentTime) + 1) + start;
+}
+</code></pre>
+<script type="text/javascript">
+//所有方法的参数一样,依次传入 目前的时间, 时间开始时的值, 时间结束时的值, 动画总时间
+//线性
+function linear(currentTime,start,stop,totalTime){
+  return stop * currentTime/totalTime + start;
+}
+//二次方 in
+function easing_in(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  return stop * currentTime*currentTime +start;
+}
+//二次方 out
+function easing_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  return start - stop * currentTime * (currentTime);
+}
+//二次方 先in后out
+function easing_in_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  if (currentTime < 1) return stop/2*currentTime*currentTime + start;
+  currentTime--;
+  return -stop/2 * (currentTime*(currentTime-2) - 1) + start;
+}
+//三次方 in
+function cubic_in(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  return stop*currentTime*currentTime*currentTime + start;
+  
+}
+function cubic_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  currentTime--;
+  return stop*(currentTime*currentTime*currentTime + 1) + start;
+  
+}
+function cubic_in_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  if (currentTime < 1) return stop/2*currentTime*currentTime*currentTime + start;
+  currentTime -= 2;
+  return stop/2*(currentTime*currentTime*currentTime + 2) + start;
+  
+}
+//四次方
+function quartic_in(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  return stop*currentTime*currentTime*currentTime*currentTime + start;
+  
+}
+function quartic_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  currentTime /= totalTime;
+  currentTime--;
+  return -stop * (currentTime*currentTime*currentTime*currentTime - 1) + start;
+  
+}
+function quartic_in_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime/2;
+  if (currentTime < 1) return stop/2*currentTime*currentTime*currentTime*currentTime + start;
+  currentTime -= 2;
+  return -stop/2 * (currentTime*currentTime*currentTime*currentTime - 2) + start;
+  
+}
+//五次方
+function quintic_in(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  return stop*currentTime*currentTime*currentTime*currentTime*currentTime + start;
+  
+}
+function quintic_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  currentTime--;
+  return stop*(currentTime*currentTime*currentTime*currentTime*currentTime + 1) + start;
+  
+}
+function quintic_in_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime/2;
+  if (currentTime < 1) return stop/2*currentTime*currentTime*currentTime*currentTime*currentTime + start;
+  currentTime -= 2;
+  return stop/2*(currentTime*currentTime*currentTime*currentTime*currentTime + 2) + start;
+  
+}
+//正弦线
+function sinusoidal_in(currentTime,start,stop,totalTime){
+  return -stop * Math.cos(currentTime/totalTime * (Math.PI/2)) + stop + start;
+  
+}
+function sinusoidal_out(currentTime,start,stop,totalTime){
+  return stop * Math.sin(currentTime/totalTime * (Math.PI/2)) + start;
+  
+}
+function sinusoidal_in_out(currentTime,start,stop,totalTime){
+  return -stop/2 * (Math.cos(Math.PI*currentTime/totalTime) - 1) + start;
+  
+}
+
+//指数线
+function exponential_in(currentTime,start,stop,totalTime){
+  return stop * Math.pow( 2, 10 * (currentTime/totalTime - 1) ) + start;
+  
+}
+function exponential_out(currentTime,start,stop,totalTime){
+  return stop * ( -Math.pow( 2, -10 * currentTime/totalTime ) + 1 ) + start;
+  
+}
+function exponential_in_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime/2;
+  if (currentTime < 1) return stop/2 * Math.pow( 2, 10 * (currentTime - 1) ) + start;
+  currentTime--;
+  return stop/2 * ( -Math.pow( 2, -10 * currentTime) + 2 ) + start;
+  
+}
+
+//循环
+function circular_in(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  return -stop * (Math.sqrt(1 - currentTime*currentTime) - 1) + start;
+  
+}
+function circular_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime;
+  currentTime--;
+  return stop * Math.sqrt(1 - currentTime*currentTime) + start;
+  
+}
+function circular_in_out(currentTime,start,stop,totalTime){
+  currentTime /= totalTime/2;
+  if (currentTime < 1) return -stop/2 * (Math.sqrt(1 - currentTime*currentTime) - 1) + start;
+  currentTime -= 2;
+  return stop/2 * (Math.sqrt(1 - currentTime*currentTime) + 1) + start;
+}
+</script>
+</div>
+</html>
