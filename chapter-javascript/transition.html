@@ -169,121 +169,131 @@ function circular_in_out(currentTime,start,stop,totalTime){
 //所有方法的参数一样,依次传入 目前的时间, 时间开始时的值, 时间结束时的值, 动画总时间
 //线性
 function linear(currentTime,start,stop,totalTime){
-  return stop * currentTime/totalTime + start;
+  return start + stop * currentTime/totalTime;
 }
 //二次方 in
 function easing_in(currentTime,start,stop,totalTime){
   currentTime /= totalTime;
-  return stop * currentTime*currentTime +start;
+  return start + stop * currentTime*currentTime;
 }
 //二次方 out
 function easing_out(currentTime,start,stop,totalTime){
   currentTime /= totalTime;
   return start - stop * currentTime*(currentTime-2);
-
 }
 //二次方 先in后out
 function easing_in_out(currentTime,start,stop,totalTime){
   currentTime /= totalTime/2;
-  if (currentTime < 1) return stop/2*currentTime*currentTime + start;
+  if (currentTime < 1){
+    return start + stop/2*currentTime*currentTime;
+  }
   currentTime--;
-  return -stop/2 * (currentTime*(currentTime-2) - 1) + start;
+  return start - stop/2 * (currentTime*(currentTime-2) - 1);
 }
 //三次方 in
 function cubic_in(currentTime,start,stop,totalTime){
   currentTime /= totalTime;
-  return stop*currentTime*currentTime*currentTime + start;
+  return start + stop*currentTime*currentTime*currentTime;
 }
 function cubic_out(currentTime,start,stop,totalTime){
   currentTime /= totalTime;
   currentTime--;
-  return stop*(currentTime*currentTime*currentTime + 1) + start;
+  return start + stop*(currentTime*currentTime*currentTime + 1);
 }
 function cubic_in_out(currentTime,start,stop,totalTime){
   currentTime /= totalTime/2;
   if (currentTime < 1){
-    return stop/2*currentTime*currentTime*currentTime + start;
+    return start + stop/2*currentTime*currentTime*currentTime;
   }
   currentTime -= 2;
-  return stop/2*(currentTime*currentTime*currentTime + 2) + start;
+  return start + stop/2*(currentTime*currentTime*currentTime + 2);
 }
 //四次方
 function quartic_in(currentTime,start,stop,totalTime){
   currentTime /= totalTime;
-  return stop*currentTime*currentTime*currentTime*currentTime + start;
+  return start + stop*currentTime*currentTime*currentTime*currentTime;
 }
 function quartic_out(currentTime,start,stop,totalTime){
   currentTime /= totalTime;
   currentTime--;
-  return start -stop * (currentTime*currentTime*currentTime*currentTime - 1) ;
+  return start - stop * (currentTime*currentTime*currentTime*currentTime - 1) ;
 }
 function quartic_in_out(currentTime,start,stop,totalTime){
   currentTime /= totalTime/2;
-  if (currentTime < 1) return stop/2*currentTime*currentTime*currentTime*currentTime + start;
+  if (currentTime < 1){
+    return start + stop/2*currentTime*currentTime*currentTime*currentTime;
+  }
   currentTime -= 2;
-  return start - stop/2 * (currentTime*currentTime*currentTime*currentTime - 2)  ;
+  return start - stop/2 * (currentTime*currentTime*currentTime*currentTime - 2);
 }
 //五次方
 function quintic_in(currentTime,start,stop,totalTime){
   currentTime /= totalTime;
-  return stop*currentTime*currentTime*currentTime*currentTime*currentTime + start;
+  return start + stop*currentTime*currentTime*currentTime*currentTime*currentTime;
 }
 function quintic_out(currentTime,start,stop,totalTime){
   currentTime /= totalTime;
   currentTime--;
-  return stop*(currentTime*currentTime*currentTime*currentTime*currentTime + 1) + start;
+  return start + stop*(currentTime*currentTime*currentTime*currentTime*currentTime + 1);
 }
 function quintic_in_out(currentTime,start,stop,totalTime){
   currentTime /= totalTime/2;
-  if (currentTime < 1) return stop/2*currentTime*currentTime*currentTime*currentTime*currentTime + start;
+  if (currentTime < 1){
+    return start + stop/2*currentTime*currentTime*currentTime*currentTime*currentTime;
+  }
   currentTime -= 2;
-  return stop/2*(currentTime*currentTime*currentTime*currentTime*currentTime + 2) + start;
+  return start + stop/2*(currentTime*currentTime*currentTime*currentTime*currentTime + 2);
 }
 //正弦线
 function sinusoidal_in(currentTime,start,stop,totalTime){
   return start - stop * Math.cos(currentTime/totalTime * (Math.PI/2)) + stop ;
 }
 function sinusoidal_out(currentTime,start,stop,totalTime){
-  return stop * Math.sin(currentTime/totalTime * (Math.PI/2)) + start;
+  return start + stop * Math.sin(currentTime/totalTime * (Math.PI/2));
 }
 function sinusoidal_in_out(currentTime,start,stop,totalTime){
-  return start - stop/2 * (Math.cos(Math.PI*currentTime/totalTime) - 1)  ;
+  return start - stop/2 * (Math.cos(Math.PI*currentTime/totalTime) - 1);
 }
 
 //指数线
 function exponential_in(currentTime,start,stop,totalTime){
-  return stop * Math.pow( 2, 10 * (currentTime/totalTime - 1) ) + start;
+  return start + stop * Math.pow( 2, 10 * (currentTime/totalTime - 1) );
 }
 function exponential_out(currentTime,start,stop,totalTime){
-  return stop * ( -Math.pow( 2, -10 * currentTime/totalTime ) + 1 ) + start;
+  return start + stop * ( -Math.pow( 2, -10 * currentTime/totalTime ) + 1 );
 }
 function exponential_in_out(currentTime,start,stop,totalTime){
   currentTime /= totalTime/2;
-  if (currentTime < 1) return stop/2 * Math.pow( 2, 10 * (currentTime - 1) ) + start;
+  if (currentTime < 1){
+    return start + stop/2 * Math.pow( 2, 10 * (currentTime - 1) );
+  }
   currentTime--;
-  return stop/2 * ( -Math.pow( 2, -10 * currentTime) + 2 ) + start;
+  return start + stop/2 * ( -Math.pow( 2, -10 * currentTime) + 2 );
 }
 
 //循环
 function circular_in(currentTime,start,stop,totalTime){
   currentTime /= totalTime;
-  return start - stop * (Math.sqrt(1 - currentTime*currentTime) - 1)  ;
+  return start - stop * (Math.sqrt(1 - currentTime*currentTime) - 1);
 }
 
 function circular_out(currentTime,start,stop,totalTime){
   currentTime /= totalTime;
   currentTime--;
-  return stop * Math.sqrt(1 - currentTime*currentTime) + start;
+  return start + stop * Math.sqrt(1 - currentTime*currentTime);
 }
 
 function circular_in_out(currentTime,start,stop,totalTime){
   currentTime /= totalTime/2;
-  if (currentTime < 1) return -stop/2 * (Math.sqrt(1 - currentTime*currentTime) - 1) + start;
+  if (currentTime < 1){
+    return start - stop/2 * (Math.sqrt(1 - currentTime*currentTime) - 1);
+  }
   currentTime -= 2;
-  return stop/2 * (Math.sqrt(1 - currentTime*currentTime) + 1) + start;
+  return start + stop/2 * (Math.sqrt(1 - currentTime*currentTime) + 1);
 }
 
 
+//效果展示
 var 
   start = 0, stop = 100, totalTime = 5000,
   effectStart = new Date().getTime(), stopevent = null, $ =  window.$ = linear, 
