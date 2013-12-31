@@ -184,7 +184,7 @@ function easing_out(currentTime,start,stop,totalTime){
 }
 //二次方 先in后out
 function easing_in_out(currentTime,start,stop,totalTime){
-  currentTime /= totalTime;
+  currentTime /= totalTime/2;
   if (currentTime < 1) return stop/2*currentTime*currentTime + start;
   currentTime--;
   return -stop/2 * (currentTime*(currentTime-2) - 1) + start;
@@ -200,8 +200,10 @@ function cubic_out(currentTime,start,stop,totalTime){
   return stop*(currentTime*currentTime*currentTime + 1) + start;
 }
 function cubic_in_out(currentTime,start,stop,totalTime){
-  currentTime /= totalTime;
-  if (currentTime < 1) return stop/2*currentTime*currentTime*currentTime + start;
+  currentTime /= totalTime/2;
+  if (currentTime < 1){
+    return stop/2*currentTime*currentTime*currentTime + start;
+  }
   currentTime -= 2;
   return stop/2*(currentTime*currentTime*currentTime + 2) + start;
 }
