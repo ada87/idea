@@ -70,7 +70,7 @@ function checkNet(){
 		document.getElementById('connect').innerHTML=navigator.onLine?'在线 online':'离线 offline';
 	}	
 	if(supportCheck){
-	    var networkState = navigator.network.connection.type;
+	    var networkState = supportCheck.type;
 	    var states = {};
 	    states[Connection.UNKNOWN]  = '未知网络';
 	    states[Connection.ETHERNET] = '网线';
