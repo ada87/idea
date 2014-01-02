@@ -58,7 +58,7 @@ window.setInterval(checkNet,500);
 <script>
 //var supportNet=navigator.onLine||false; 之前写成了这样，发现有点小问题
 var supportNet=(typeof(navigator.onLine)=='boolean');
-var supportCheck=navigator.network&&navigator.network.connection;
+var supportCheck=navigator.connection||(navigator.network&&navigator.network.connection);
 if(!supportNet){
 	document.getElementById('connectbar').innerHTML='什么破烂浏览器，不支持HTML5';
 }
