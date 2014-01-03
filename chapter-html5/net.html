@@ -26,7 +26,7 @@
 	<section id="statusbar">网络连接：<span  id="status"></span>
 	</div>
 	<pre><code>var supportNet=(typeof(navigator.onLine)=='boolean');
-var supportCheck=navigator.network&&navigator.network.connection;
+var supportCheck=navigator.network&amp;&amp;navigator.network.connection;
 if(!supportNet){
 	document.getElementById('connectbar').innerHTML='什么破烂浏览器，不支持HTML5';
 }
