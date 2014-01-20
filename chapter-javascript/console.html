@@ -12,11 +12,13 @@
   <meta name="description" content="X.D的试验室-Console 简单说明">
 </head>
 <body>
-<script type="text/javascript" src="../javascripts/console.js" debug="true">
 </script>
 <div class="wrapper markdown-body">
   <h1>Console 简单说明</h1>
-  <p></p>
+  <h3>花招1:使用克隆重写Console</h3>
+  <p>
+    由于console是window对象,也就是浏览器本身对象,所以如果想要使用super.method()去扩展是不可能的,很容易造成无限循环.刚刚玩个花样,使用两个临时对象克隆扩展了一下console.log()方法,可以自己打开
+  </p>
     占位符
     %s  字符串
     %d  number类型
@@ -27,6 +29,12 @@
     %c  CSS样式声明
 
 
+
+    Event:
+    mouse   "mousedown", "mouseup", "click", "dblclick", "mousemove", "mouseover", "mouseout", "mousewheel"
+    key     "keydown", "keyup", "keypress", "textInput"
+    touch   "touchstart", "touchmove", "touchend", "touchcancel"
+    control "resize", "scroll", "zoom", "focus", "blur", "select", "change", "submit", "reset"
 
     console.assert(expression, object)
     console.clear()
@@ -56,14 +64,22 @@
     debugger
 
   <script type="text/javascript">
-  console.assert(true,'abc');
-  console.assert(false,'abc');
-  console.assert(true,'abc');
-  console.assert(false,'abc');
-  console.assert(true,'abc');
-  console.clear();
-
-  
+  function clone(obj) {
+    console.log(obj.constructor());
+    var copy = obj.constructor();
+    for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+    }
+    return copy;
+  }
+  var winconsole = clone(window.console);
+  var tmpconsole = clone(window.console);
+  var console = window.console = {};
+  tmpconsole.log = function(str){
+    winconsole.log('%c   :'+str,'color:blue;font-size:16px;background-color:#cccccc;background-image:url("http://www.xdnote.com/favicon.ico");background-repeat:no-repeat;');
+  }
+  console = tmpconsole;
+  console.log('哈哈');
   </script>
 </div>
 console.memory

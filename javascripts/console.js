@@ -44,89 +44,56 @@
     var expHelp = function() {
       var comands = [{
         'key': '$$',
-        'des': ''
+        'des': '$$(selector) 相当于 document.querySelectorAll(selector)'
       }, {
         'key': '$x',
-        'des': ''
+        'des': '$x(path) 通过ppath取DOM'
       }, {
         'key': 'dir',
-        'des': ''
+        'des': 'dir(element) 相当于console.dir(emement)'
       }, {
         'key': 'dirxml',
-        'des': ''
+        'des': 'dirxml(object) 相当于console.dirxml(object)'
       }, {
         'key': 'keys',
-        'des': ''
+        'des': 'keys(object) 返回对象里面所有的键'
       }, {
         'key': 'values',
-        'des': ''
+        'des': 'values(object) 返回对象里面所有的值'
       }, {
         'key': 'profile',
-        'des': ''
+        'des': 'profile(name) 计算JavaScript的CPU开始'
       }, {
         'key': 'profileEnd',
-        'des': ''
+        'des': 'profileEnd(name) 计算JavaScript的CPU结束'
       }, {
         'key': 'monitorEvents',
-        'des': ''
+        'des': 'monitorEvents(object[, events]) 查看对象上面绑定的事件'
       }, {
         'key': 'unmonitorEvents',
-        'des': ''
+        'des': 'unmonitorEvents(object[, events]) 取消绑定对象上面的事件'
       }, {
         'key': 'inspect',
-        'des': ''
+        'des': 'inspect(object) 在debug window上框选到object'
       }, {
         'key': 'copy',
-        'des': ''
+        'des': 'copy(object) 复制对象到剪切板上'
       }, {
         'key': 'clear',
-        'des': ''
+        'des': '相当于 console.clear()'
       }, {
         'key': 'getEventListeners',
-        'des': ''
-      }, {
-        'key': 'debug',
-        'des': ''
-      }, {
-        'key': 'undebug',
-        'des': ''
-      }, {
-        'key': 'unmonitor',
-        'des': ''
-      }, {
-        'key': 'monitor',
-        'des': ''
-      }, {
-        'key': 'table',
-        'des': ''
-      }, {
-        'key': '$0',
-        'des': ''
-      }, {
-        'key': '$1',
-        'des': ''
-      }, {
-        'key': '$2',
-        'des': ''
-      }, {
-        'key': '$3',
-        'des': ''
-      }, {
-        'key': '$4',
-        'des': ''
-      }, {
-        'key': '$_',
-        'des': ''
+        'des': 'getEventListeners(object) 查看对象上面绑定的事件,相当于monitorEvents'
       }];
-      var cmdStyle = 'display:block;width:100px;color:red;font-size:16px;text-align:right;';
-      var desStyle = 'color:blue;font-size:16px;';
+      var cmdStyle = 'display:block;width:100px;color:red;font-size:12px;text-align:right;';
+      var desStyle = 'color:blue;font-size:12px;';
       var args = [];
       window.console.help = console.help = function() {
-
         for (var i = 0, j = comands.length; i < j; i++) {
           var helptxt = '';
           helptxt += '%c' + comands[i]['key'] + ':';
-          helptxt += '%c' + '   da'+comands[i]['des'];
+          helptxt += '%c' + '   ' + comands[i]['des'];
+          console.log(helptxt, cmdStyle, desStyle);
         }
       };
     };
