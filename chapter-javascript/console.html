@@ -64,17 +64,16 @@
     debugger
 
   <script type="text/javascript">
-  function clone(obj) {
-    console.log(obj.constructor());
-    var copy = obj.constructor();
-    for (var attr in obj) {
-        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
-    }
-    return copy;
+  function cloneConsole() {
+      var clone = {};
+      clone.log = console.log;
+      return clone;
   }
-  var winconsole = clone(window.console);
-  var tmpconsole = clone(window.console);
-  var console = window.console = {};
+
+  var winconsole = cloneConsole();
+  var tmpconsole = cloneConsole();
+  winconsole.log(2);
+  console = window.console = {};
   tmpconsole.log = function(str){
     winconsole.log('%c   :'+str,'color:blue;font-size:16px;background-color:#cccccc;background-image:url("http://www.xdnote.com/favicon.ico");background-repeat:no-repeat;');
   }
