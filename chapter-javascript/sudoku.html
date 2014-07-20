@@ -8,7 +8,6 @@
 var Sudoku = function(coords){
 	this.init(coords);
 }
-
 Sudoku.prototype = {
 	_H:0,_V:1,_T:2,HEIGHT:9,
 	maxCount:2,completeCount:0,
@@ -75,7 +74,7 @@ Sudoku.prototype = {
 		}
 	},
 
-	setSingleX:function(pos,this){
+	setSingleX:function(pos){
 		var arr = this.getArr(pos,this._H);
 		var oldstr= arr.join('');
 		var sureValue = this.getSingleValue(arr).split('');
@@ -86,18 +85,19 @@ Sudoku.prototype = {
 					if(arr[i]>10&&arr[i].indexOf(sureValue[j])>=0){
 						var x = pos;
 						var y =i;
+
 						this.cols[x][y]=sureValue[j];
 					}
 				}
 			}
 			var newstr = this.getArr(pos,this._H).join('');
 			if(newstr != oldstr){
-				this.resetMayBe(pos,,this._H);
+				this.resetMayBe(pos,this._H);
 				// this.setSingleX(pos,this);
 			}
 		}
 	},
-	setSingleY:function(pos,this){
+	setSingleY:function(pos){
 		var arr = this.getArr(pos,this._V);
 		var sureValue = this.getSingleValue(arr).split('');
 		var sureSize = sureValue.length;
@@ -113,7 +113,7 @@ Sudoku.prototype = {
 			}
 		}
 	},
-	setSingleZ:function(pos,this){
+	setSingleZ:function(pos){
 		var arr = this.getArr(pos,this._T);
 		var sureValue = this.getSingleValue(arr).split('');
 		var sureSize = sureValue.length;
@@ -132,6 +132,41 @@ Sudoku.prototype = {
 				}
 			}
 		}
+	},
+	setSingleValue:function(x,y,value){
+		var arrX = this.getArr(x,this._X);
+		var arrY = this.getArr(y,this._Y);
+//		var arrT = this.getArr(xy,this._T)
+//		this.cols[x][y]=sureValue[j];
+	},
+	offset:function(start,index,type){
+		switch(type){
+			case this._H:
+				return [start,index];
+			case this._V:
+				return [index,start];
+			case this._T:
+				var h=Math.floor(index/3);
+				var v=Math.floor(index%3);
+				var starth=h*3;
+				var startv=v*3;
+				var tarr =[
+					this.cols[starth][startv],
+					this.cols[starth][startv+1],
+					this.cols[starth][startv+2],
+					this.cols[starth+1][startv],
+					this.cols[starth+1][startv+1],
+					this.cols[starth+1][startv+2],
+					this.cols[starth+2][startv],
+					this.cols[starth+2][startv+1],
+					this.cols[starth+2][startv+2]
+				];
+				return tarr;
+		}
+
+	},
+	index:function(x,y){
+
 	},
 	getSingleValue:function(arr){
 		var numberstr = '',rtn='';
@@ -172,10 +207,13 @@ Sudoku.prototype = {
 	},
 	resetMayBe:function(index,type){
 		var arr=this.getArr(index,type);
-	}
+	},
 	init:function(coords){
 		this.cols=coords;
 		for(var i=0;i<9;i++){
+			/**
+			* 多数组要循环SLICE，因为一个SLICE的数组只是指针，
+			*/
 			this._defaultcols.push(coords.slice(0));
 			// var tran = [];
 			// for(var j=0;j<9;j++){
