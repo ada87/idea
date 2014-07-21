@@ -1,16 +1,36 @@
+<!DOCTYPE HTML>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Sudoku 演算</title>
-</head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
 
-<script>
+  <title>Sudoku 计算</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室 Sudoku 计算">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<div class="wrapper markdown-body">
+  <p>Sudoku这游戏非常过瘾，最好还是用老式的NOKIA手机玩，比智能手机体验还好。无聊间，想写个推算程序，目前还没完工，不过可以推送一些，详情见控制台输出与源代码</p>
+  <p>说明一下：最初的想法是分三个阶段计算：开发时发现就一个阶段也很快可以把结果计算出来，出于技术爱好，还是按原想法写了下，可惜代码都不怎么体面。</p>
+  <pre>
+  	1.计算行、列、宫内，可以完全确定的数字。比如 40 62 13 26 都为数字 1 则可以确定 01 位肯定就是数字1
+	2.推导根据 水平和垂直的宫，去推导数据，比如上三宫的两宫的一二行都有数字 1，第三行只有一个空位，那肯定也是数字1
+	3.反向推导 （正在开发中，需要假设位，目前正在考虑比较高效的算法，挑战下自己）比如一个空位可能是 1或2，则假设为1或2 是否能使其它的行列宫不成立，如果假设的2不成立，则此号位就是 1
+	</pre>
+  <p>可惜我只实现了阶段一，和阶段二的小部分，阶段三之前想过一种算法，复杂度过高暂没加进去，后续有空时再研究。</p>
+  <p></p>
+</div>
+<script type="text/javascript">
 var Sudoku = function(coords){
 	this.init(coords);
 }
 Sudoku.prototype = {
 	_H:0,_V:1,_T:2,HEIGHT:9,
-	maxCount:2,completeCount:0,
+	maxCount:10,completeCount:0,mCount:0,
 	cols:[],maybe:[],_defaultcols:[],
 	//开始运算,
 	//再说一下，此程序很难理解，因为用了一些JavaScript的默认转换的特性，所以里面有很多字符串与数字相加，比较的计算，在其它语言里面是不允许的，在JavaScript用太多也不好，大家不要学我，看的时候略过这些不规范。
@@ -28,18 +48,17 @@ Sudoku.prototype = {
 	*	1.计算行、列、宫内，可以完全确定的数字。比如 40 62 13 26 都为数字 1 则可以确定 01 位肯定就是数字1
 	*	2.推导根据 水平和垂直的宫，去推导数据，比如上三宫的两宫的一二行都有数字 1，第三行只有一个空位，那肯定也是数字1
 	*	3.反向推导 （正在开发中，需要假设位，目前正在考虑比较高效的算法，挑战下自己）比如一个空位可能是 1或2，则假设为1或2 是否能使其它的行列宫不成立，如果假设的2不成立，则此号位就是 1	
+		目前 发现3不用，也可以算出结果，
 	*
 	*/
 	count:function(){
-		if(this.completeCount>=this.maxCount){
+		if(this.mCount==80||this.completeCount>=this.maxCount){
+			console.info('计算完成：计算次数：'+this.completeCount);
 			this.showResult();
 			return;
 		}
 		console.time('Count'+this.completeCount+' for reckon');
-		//阶段一：算出能够肯定的数据
 		this.setSingleData();
-		//阶段二：简单推导
-		this.deduce();
 		console.timeEnd('Count'+this.completeCount+' for reckon');
 		this.completeCount++;
 		this.count();
@@ -48,6 +67,7 @@ Sudoku.prototype = {
 	/**
 	*	思路：如果位置上已经有数字了，则跳过，如果没有数字（初始为0），则计算此位置的横排，竖排，和所处宫位的数据，计算出可能在此位置上的数据
 	*	
+	*	算法：对一个坐标，取其横向，纵向，宫内分别可能的Maybe,再计算交集则则可算出该位上的取值区间
 	*/
 	clearData:function(){
 		for(var x = 0; x < 9; x++){
@@ -77,7 +97,21 @@ Sudoku.prototype = {
 	setSingleX:function(pos){
 		var arr = this.getArr(pos,this._H);
 		var oldstr= arr.join('');
-		var sureValue = this.getSingleValue(arr).split('');
+		if(oldstr.length==9)return;
+		var values = this.getSureValue(arr);
+		var mustValue = values[0].split('');
+		var mustSize = mustValue.length;
+		if(mustSize > 0){
+			for(var i=0;i<9;i++){
+				for(var j=0;j<mustSize;j++){
+					if(arr[i]>10){
+						this.cols[pos][i]=this.cols[pos][i].replace(mustValue[j],'');
+						if(this.cols[pos][i]<10)this.mCount++;
+					}
+				}
+			}			
+		}
+		var sureValue = values[1].split('');;
 		var sureSize = sureValue.length;
 		if(sureSize>0){
 			for(var i=0;i<9;i++){
@@ -85,21 +119,30 @@ Sudoku.prototype = {
 					if(arr[i]>10&&arr[i].indexOf(sureValue[j])>=0){
 						var x = pos;
 						var y =i;
-
-						this.cols[x][y]=sureValue[j];
+						this.setSingleValue(x,y,sureValue[j]);
 					}
 				}
-			}
-			var newstr = this.getArr(pos,this._H).join('');
-			if(newstr != oldstr){
-				this.resetMayBe(pos,this._H);
-				// this.setSingleX(pos,this);
 			}
 		}
 	},
 	setSingleY:function(pos){
 		var arr = this.getArr(pos,this._V);
-		var sureValue = this.getSingleValue(arr).split('');
+		var oldstr= arr.join('');
+		if(oldstr.length<=9)return;
+		var values = this.getSureValue(arr);
+		var mustValue = values[0].split('');;
+		var mustSize = mustValue.length;
+		if(mustSize > 0){
+			for(var i=0;i<9;i++){
+				for(var j=0;j<mustSize;j++){
+					if(arr[i]>10&&arr[i].indexOf(mustValue[j])>-1){
+						this.cols[i][pos] = this.cols[i][pos].replace(mustValue[j],'');
+						if(this.cols[i][pos]<10)this.mCount++;
+					}
+				}
+			}			
+		}
+		var sureValue = values[1].split('');;
 		var sureSize = sureValue.length;
 		if(sureSize>0){
 			for(var i=0;i<9;i++){
@@ -107,15 +150,36 @@ Sudoku.prototype = {
 					if(arr[i]>10&&arr[i].indexOf(sureValue[j])>=0){
 						var x = i;
 						var y =pos;
-						this.cols[x][y]=sureValue[j];
+						this.setSingleValue(x,y,sureValue[j]);
 					}
 				}
 			}
 		}
 	},
 	setSingleZ:function(pos){
-		var arr = this.getArr(pos,this._T);
-		var sureValue = this.getSingleValue(arr).split('');
+		var arr = this.getArr(pos,this._V);
+		var oldstr= arr.join('');
+		if(oldstr.length==9)return;
+		var values = this.getSureValue(arr);
+		var mustValue = values[0].split('');;
+		var mustSize = mustValue.length;
+		if(mustSize > 0){
+			for(var i=0;i<9;i++){
+				for(var j=0;j<mustSize;j++){
+					if(arr[i]>10&&arr[i].indexOf(mustValue[j])>-1){
+						var h=Math.floor(pos/3);
+						var v=pos%3;
+						var starth=h*3;
+						var startv=v*3;
+						var x=starth+Math.floor(i/3);
+						var y=startv+i%3;
+						this.cols[x][y] = this.cols[x][y].replace(mustValue[j],'');
+						if(this.cols[x][y]<10)this.mCount++;
+					}
+				}
+			}			
+		}
+		var sureValue = values[1].split('');
 		var sureSize = sureValue.length;
 		if(sureSize>0){
 			for(var i=0;i<9;i++){
@@ -127,17 +191,37 @@ Sudoku.prototype = {
 						var startv=v*3;
 						var x=starth+Math.floor(i/3);
 						var y=startv+i%3;
-						this.cols[x][y]=sureValue[j];
+						this.setSingleValue(x,y,sureValue[j]);
 					}
 				}
 			}
 		}
 	},
 	setSingleValue:function(x,y,value){
-		var arrX = this.getArr(x,this._X);
-		var arrY = this.getArr(y,this._Y);
-//		var arrT = this.getArr(xy,this._T)
-//		this.cols[x][y]=sureValue[j];
+		this.cols[x][y] = value;
+		this.mCount++;
+		for(var i=0;i<9;i++){
+			if(this.cols[x][i]>10&&this.cols[x][i].indexOf(value)>-1&&i!=y){
+				this.cols[x][i] = this.cols[x][i].replace(value,'');
+				if(this.cols[x][i]<10)this.mCount++;
+			}
+		}
+		for(var i=0;i<9;i++){
+			if(this.cols[i][y]>10&&this.cols[i][y].indexOf(value)>-1&&i!=x){
+				this.cols[i][y] = this.cols[i][y].replace(value,'');
+				if(this.cols[i][y]<10)this.mCount++;
+			}
+		}
+		var pos = this.postion(x,y,this._T);
+		var arrT = this.getArr(pos[0],this._T);
+		for(var i=0;i<9;i++){
+			if(arrT[i]>10&&arrT[i].indexOf(value)>-1&&arrT[i]!=value){
+				var tmpos = this.postion(pos[0],i,this._T);
+				this.cols[tmpos[0]][tmpos[1]] = this.cols[tmpos[0]][tmpos[1]].replace(value,'');
+				if(this.cols[tmpos[0]][tmpos[1]]<10)this.mCount++;
+			}
+		}
+
 	},
 	offset:function(start,index,type){
 		switch(type){
@@ -146,49 +230,43 @@ Sudoku.prototype = {
 			case this._V:
 				return [index,start];
 			case this._T:
-				var h=Math.floor(index/3);
-				var v=Math.floor(index%3);
-				var starth=h*3;
-				var startv=v*3;
-				var tarr =[
-					this.cols[starth][startv],
-					this.cols[starth][startv+1],
-					this.cols[starth][startv+2],
-					this.cols[starth+1][startv],
-					this.cols[starth+1][startv+1],
-					this.cols[starth+1][startv+2],
-					this.cols[starth+2][startv],
-					this.cols[starth+2][startv+1],
-					this.cols[starth+2][startv+2]
-				];
-				return tarr;
+				var h = Math.floor(start / 3);
+				var v = start % 3;
+				var starth = h * 3 + Math.floor(index/3);
+				var startv = v * 3 + index%3;
+				return [starth, startv];
 		}
 
 	},
-	index:function(x,y){
-
+	postion:function(x,y,type){
+		switch (type) {
+			case this._H:
+				return[x,y];
+			case this._V:
+				return[y,x];
+			case this._T:
+				var start = Math.floor(x/3) *3  + Math.floor(y/3);
+				var index = y%3 + (x%3)*3;
+				return [start,index];
+		}
 	},
-	getSingleValue:function(arr){
-		var numberstr = '',rtn='';
+	getSureValue:function(arr){
+		var numberstr = '', must='', sure='';
 		for(var i=0,j=arr.length;i<j;i++){
 			if(arr[i]>10){
 				numberstr+=arr[i];
+			}else{
+				must+=arr[i];
 			}
 		}
 		for(var i=1;i<=9;i++){
 			var s=''+i;
 			var start = numberstr.indexOf(s);
-			if(start!=-1&&start==numberstr.lastIndexOf(s)){
-				rtn+=s;
+			if(start!=-1&&start==numberstr.lastIndexOf(s)&&must.indexOf(s)==-1){
+				sure+=s;
 			}
 		}
-		return rtn;
-	},
-	/**
-	*	简单推导：根据横竖向的两个宫的两条已知数据进行推导。
-	*/
-	deduce:function(){
-
+		return [must,sure];
 	},
 	//此位置上可能的数据，将三围（横竖宫）上所有已经的数据T掉，及为可能数据
 	getMaybe:function(row,col,tm){
@@ -199,27 +277,25 @@ Sudoku.prototype = {
 			if(tm[i]<10&&tm[i]>0) exclude.push(tm[i]);
 		}
 		for(var i=1;i<=9;i++){
-			if(exclude.indexOf(i)==-1){
+			if(exclude.indexOf(''+i)==-1){
 				maybe.push(i);
 			}
 		}
 		return maybe.join('');
 	},
-	resetMayBe:function(index,type){
-		var arr=this.getArr(index,type);
-	},
 	init:function(coords){
-		this.cols=coords;
+		// this.cols=coords;
 		for(var i=0;i<9;i++){
 			/**
 			* 多数组要循环SLICE，因为一个SLICE的数组只是指针，
 			*/
-			this._defaultcols.push(coords.slice(0));
-			// var tran = [];
-			// for(var j=0;j<9;j++){
-			// 	tran.push(''+coords[i][j]);
-			// }
-			// this.cols.push(tran);
+			this._defaultcols.push(coords[i].slice(0));
+			var tran = [];
+			for(var j=0;j<9;j++){
+				if(coords[i][j])this.mCount++;
+				tran.push(''+coords[i][j]);
+			}
+			this.cols.push(tran);
 		}
 	},
 	getArr:function(index,type){
@@ -264,26 +340,29 @@ Sudoku.prototype = {
 		for(var x=0;x<9;x++){
 			for(var y=0;y<9;y++){
 				msg+='  %c'+this.cols[x][y];
-				style.push(this._defaultcols[x][y]?'\'color:black;\'':'\'color:green;\'')
+				style.push(this._defaultcols[x][y]?'"color:black;"':'"color:green;"');
 			}
 			msg+='\\n';
 		}
-		window.eval('console.warn(\'' + msg + '\',' +style.join(',')+ ');');
+		// console.log(msg);
+		// console.log(style.join(','));
+		window.eval('console.warn("' + msg + '",' +style.join(',')+ ');');
 	}
 }
 
 var arr=[
-	[0,0,7,0,0,5,0,0,2],
-	[0,8,6,0,3,0,9,0,0],
-	[0,5,0,0,7,0,0,0,0],
-	[0,0,4,0,0,8,0,0,0],
-	[8,9,0,0,0,0,0,7,5],
-	[0,0,0,1,0,0,3,0,0],
-	[0,0,0,0,2,0,0,6,0],
-	[0,0,8,0,6,0,7,1,0],
-	[3,0,0,9,0,0,8,0,0]
+	[0,0,8,3,0,9,1,0,0],
+	[9,0,0,0,6,0,0,0,4],
+	[0,0,7,5,0,4,8,0,0],
+	[0,3,6,0,0,0,5,4,0],
+	[0,0,1,0,0,0,6,0,0],
+	[0,4,2,0,0,0,9,7,0],
+	[0,0,5,9,0,7,3,0,0],
+	[6,0,0,0,1,0,0,0,8],
+	[0,0,4,6,0,8,2,0,0]
 ];
 var sudoku = new Sudoku(arr);
 sudoku.reckon();
 </script>
+</body>
 </html>
