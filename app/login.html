@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>和笔记 -- 中国移动</title>
+		<meta name="description" content="和笔记">
+		<meta name="author" content="Huawei">
+		<meta name="keywords" content="和笔记,笔记,中国移动,和彩云,mcloud,mobile note,note,notes,mobilenote,mnote"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+		<script type="text/javascript">
+            (function(){
+                var index = document.cookie.indexOf('autoLogin');
+                if(index >= 0){
+                    window.location = 'index.html';
+                }
+            })();
+        </script>
+		<link rel="stylesheet" type="text/css" href="css/base.css" />
+		<link rel="stylesheet" type="text/css" href="login/css/login.css" />
+		<script type="text/javascript" src="js/libs/jquery-1.8.3.min.js"></script>
+	</head>
+	<body>
+		<div class="bg_blue">
+			<div class="main">
+				<!-- logo -->
+				<a class="left logo_link" href="mnote.html?version=3.8.0" title="和笔记" target="_blank" hidefocus="true"><h1 class="logo texthide">和笔记</h1></a>
+				
+				<!-- 登录表单 -->
+				<div class="rel left login_form font14">
+						
+					<!-- 标题行 -->
+					<div class="login_form_head clearfix">
+						<div class="left white">登录和笔记</div>
+						<div class="right switch_type white" data-bind="text:loginText, click:changeLoginType"></div>
+					</div>
+					
+					<!-- 通行证登录方式 start -->
+					<!-- ko if:loginType()==='passport' -->
+					<div style="display: none" data-bind="visible:loginType()==='passport'">
+					<!-- 帐号 -->
+					<div class="input_wrap phone">
+						<input id="phone" class="input_long" type="text" tabindex="1" maxlength="55" data-bind="value:phone.value, valueUpdate:'keyup', event:{blur:phoneCheck, paste: function(){$root.onPaste($element);return true;}}" />
+						<div class="selectnone abs lightgray font16 tips" data-bind="visible:phone.value()==='', click:function(){$($element).prev().focus();}">通行证号/手机号/邮箱</div>
+						<p class="abs phone_error" data-bind="css: {invisible: showPhoneMsg}, html: phone.errorMsg"></p>
+					</div>
+					
+					<!-- 密码 -->
+					<div class="input_wrap pwd passport_pwd_wrap">
+						<input id="password" class="input_long" type="password" tabindex="2" maxlength="16" data-bind="value:password.value,valueUpdate:'keyup', event:{paste: function(){$root.onPaste($element);return true;}}" />
+						<div class="selectnone abs lightgray font16 tips" data-bind="visible:password.value()==='', click:function(){$($element).prev().focus();}">密码</div>
+						<p class="abs pwd_error" data-bind="css: {invisible: showPwdMsg}, style:{'line-height':password.errorMsg().length<15?'34px':'20px'}, html: password.errorMsg"></p>
+					</div>
+					
+					<!-- 自动登录按钮与错误提示信息 -->
+					<div class="abs auto_login white" data-bind="css:autoLoginStauts, click:switchAutoLogin">自动登录</div>
+					
+					<!-- 登录按钮 -->
+					<div id="login" class="btn login texthide" tabindex="3" data-bind="css:{'logining':isLogining}, click:login, buttonStyle:'login'">登 录</div>
+					
+					<!-- 登录框页脚行 -->
+					<div class="login_form_foot">
+						<a class="link reg" href="https://www.cmpassport.com/umcsso/notify?optype=2&sourceid=13&backurl=mnote.weibo.10086.cn/AppServer/sso_login.jsp&check=17d81726577d56c85cad18eab9ea7585" target="_blank" hidefocus="true">免费注册通行证</a>
+						<a class="link forget" href="https://www.cmpassport.com/umcsso/notify?optype=10&sourceid=13&check=6fd873f094300e4847b3ad5abef0d08a" target="_blank" hidefocus="true">忘记密码</a>
+					</div>
+					
+					</div>
+					<!-- /ko -->
+					<!-- 通行证登录方式 end -->
+					<!-- =========================================================================== -->
+					<!-- 短信登录方式 start -->
+					<!-- ko if:loginType()==='msg' -->
+					<div style="display: none" data-bind="visible:loginType()==='msg'">
+					<!-- 帐号 -->
+					<div class="input_wrap phone">
+						<input id="phone" class="input_long" type="text" tabindex="1" maxlength="11" data-bind="value:phone.value, valueUpdate:'keyup', event:{blur:phoneCheck, paste: function(){$root.onPaste($element);return true;}}" />
+						<div class="selectnone abs lightgray font16 tips" data-bind="visible:phone.value()==='', click:function(){$($element).prev().focus();}">手机号</div>
+						<p class="abs phone_error" data-bind="css: {invisible: showPhoneMsg}, html: phone.errorMsg"></p>
+					</div>
+					
+					<!-- 密码 -->
+					<div class="input_wrap pwd">
+						<input id="password" class="input_short" type="password" tabindex="2" maxlength="6" data-bind="value:password.value,valueUpdate:'keyup', event:{paste: function(){$root.onPaste($element);return true;}}" />
+						<div class="selectnone abs lightgray font16 tips" data-bind="visible:password.value()==='', click:function(){$($element).prev().focus();}">短信密码</div>
+						<!-- ko ifnot:isCounting -->
+						<span class="abs font13 white btn getmsg" data-bind="click:getMsgPwd, buttonStyle:'getmsg'">免费短信密码</span>
+						<!-- /ko -->
+						<!-- ko if:isCounting -->
+						<span class="abs font13 white btn getmsg counting" data-bind="text:countingText"></span>
+						<!-- /ko -->
+						<p class="abs pwd_error" data-bind="css: {invisible: showPwdMsg}, html: password.errorMsg"></p>
+					</div>
+					
+					<!-- 登录按钮 -->
+					<div id="login" class="btn login texthide" tabindex="3" data-bind="css:{'logining':isLogining}, click:login, buttonStyle:'login'">登 录</div>
+					
+					</div>
+					<!-- /ko -->
+					<!-- 短信登录方式 end -->
+					
+					<!-- 遮罩，提交请求后覆盖表单 -->
+					<div style="display:none" class="selectnone mask" data-bind="visible: isLogining"></div>
+					<!--
+					<img style="display:none" class="loading" src="login/image/loading.gif" data-bind="visible: isLogining" />
+					-->
+				</div>
+				
+			</div>
+		</div>
+		<!-- 产品特性 -->
+		<div class="content clearfix">
+			<div class="item1">
+				<h3>多种形式记录</h3>
+				<p>您可以使用手机/电脑创建文字、图片、语音、视频、地理位置的笔记。</p>
+			</div>
+			<div class="item2">
+				<h3>加密柜保护您的隐私</h3>
+				<p>将您的帐号、密码等重要信息放入加密柜，永不泄露。</p>
+			</div>
+			<div class="item3">
+				<h3>跨平台、多终端同步</h3>
+				<p>任何时间任何地点使用手机/电脑记录工作、生活、学习，帮您实现一端记录，多终端查看。</p>
+			</div>
+			<div class="item4">
+				<h3>业界唯一免费短信提醒</h3>
+				<p>您可以对笔记设置传统的铃声提醒、震动提醒，还可以设置免费的短信提醒。</p>
+			</div>
+		</div>
+		
+		<!-- 脚部 -->
+		<div id="footer" class="foot txtcenter" style="visibility: hidden">
+			<a target="_blank" href="http://www.miibeian.gov.cn/" hidefocus="true">京ICP备05002571号</a> | 中国移动通信版权所有
+		</div>
+		
+		<script src="js/libs/knockout-2.2.1.js"></script>
+		<!-- 导入脚本 -->
+	    <script src="js/import.js"></script>
+	    <script type="text/javascript">
+	        window.requireJS([
+	            'libs/json2', 'libs/jquery.cookie', 'libs/base64',
+	            'notesweb/constants', 'notesweb/util', 'notesweb/engines/engines'
+	        ]);
+	        window.requireJS2(['js/commonAjax', 'js/errorcode', 'login/js/login_ViewModel']);
+	    </script>
+		<script type="text/javascript">
+			var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+			document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F949a05d7391038f1df31725531ab8bbc' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		<script language="javascript" type="text/javascript" src="js/insdc_3j.js"></script>
+	</body>
+</html>
