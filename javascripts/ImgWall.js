@@ -80,12 +80,11 @@
 		  	for (var i = 0, iLen = lists.length; i < iLen; i++) {
 		  		transform = lists[i] + 'ransform';
 		  		if (transform in elementStyle) {
-		  			return lists[i].substr(0, lists[i].length - 1);
+		  			return lists[i].substr(0, lists[i].length - 1) + 'Transform';
 		  		}
 		  	}
 		  	return false;
-	  	}())+STYLE.TRANSFORM ;
-	  	alert(STYLE.TRANSFORM);
+	  	}()) || STYLE.TRANSFORM;
 		
 		ELEMENTS.ROOT = document.getElementById(config.id);
 	};
