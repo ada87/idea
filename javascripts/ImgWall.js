@@ -91,7 +91,7 @@
 		TOUTH.LOCK = false;
 		//点击屏幕
 		var tapHandder = function(evt){
-			debug(evt);
+//			debug(evt);
 			if(CONFIG.TRANS_MODE){
 				if(STATE.BAR_SHOW){
 					ELEMENTS.HEAD.style.display='none';
