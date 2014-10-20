@@ -8,9 +8,9 @@
 	var debug = function(o){
 		for(i in o){
 			var str = '';
-			if(o.hasOwnProperty(i)){
+//			if(o.hasOwnProperty(i)){
 				str+=i+':'+o[i]+'\n';
-			}
+//			}
 		}
 		alert(str);
 //		console.log(o);
@@ -91,7 +91,6 @@
 		TOUTH.LOCK = false;
 		//点击屏幕
 		var tapHandder = function(evt){
-//			debug(evt);
 			if(CONFIG.TRANS_MODE){
 				if(STATE.BAR_SHOW){
 					ELEMENTS.HEAD.style.display='none';
@@ -107,8 +106,9 @@
 		}
 		//移动
 		var panendHandder = function(evt){
+			console.log(evt);
 			debug(evt);
-	    	if(evt.velocityX<0){
+	    	if(evt.deltaX<0){
 	    		var index = STATE.CURRENT_INDEX-1;
 	    		index = index<0?0:index;
 	    	}else{
