@@ -148,7 +148,7 @@
 		}
 
 		var pinch = new Hammer.Pinch();
-		var rotate = new Hammer.Rotation();
+		var rotate = new Hammer.Rotate();
 		pinch.recognizeWith(rotate);
 		TOUTH.add([pinch, rotate]);
 		
