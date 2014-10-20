@@ -71,9 +71,6 @@
 		
 		alert(document.body.offsetWidth);
 		alert(document.body.offsetHeight);
-		alert(document.body.offsetWidth);
-		alert(document.body.offsetHeight);
-		
 		
 		
 		STYLE.WIN_HEIGHT=document.body.offsetHeight;
@@ -160,8 +157,10 @@
 	};
 	var ImgWall = function(config){
 		_self=this;
-		_initDefault(config);
-		stepup();
+		window.setTimeout(function(){
+			_initDefault(config);
+			stepup();
+		},100)
 	}
 
 	ImgWall.prototype = {
