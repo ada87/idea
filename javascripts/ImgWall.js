@@ -5,74 +5,23 @@
 		fn(true);
 	}
 })(function(gobal){
-	var debug = function(o){
-		for(i in o){
-			var str = '';
-//			if(o.hasOwnProperty(i)){
-				str+=i+':'+o[i]+'\n';
-//			}
-		}
-		alert(str);
-//		console.log(o);
-	}
 	//单例模式
 	var _self = null;
 	//配置及数据存放
 	var CONFIG = {
-		CONTAINER_ID : '',
-		TRANS_MODE : true,
-		TRANS_HIDE : true,
-		AUTO_OPEN : true,
-		AUTO_PLAY : false,
-		AUTO_PLAY_LIMIT : 0,
-		DATAS:[]
+		CONTAINER_ID : '',			//	容器ID
+		SCALE:true,					//	开启放大缩小
+		ROTATE:false,				//	开启旋转
+		AUTO_OPEN : true,			//	自动启动,如果设为false，只会new一个imgwall,手动调用一下imgwall.open方法即可打开
+		AUTO_PLAY : false,			//	是否自动播放
+		AUTO_PLAY_LIMIT : 0,		//	自动播放时间设置
+		DATAS:[]					//	图片数组
 	};
 	//计算样式的数据
 	var STYLE = {
-		TRANSFORM:'transform',
-		WIN_WIDTH:0,
-		WIN_HEIGHT:0,
-		OPACTIY:'0.5',
-		HEAD_BG:'#4B4B4B',
-		HEAD_HEIGHT:'3em',
-		HEAD_BG:'#4B4B4B',
-		HEAD_HEIGHT:'3em'
-	};
-	//页面元素
-	var ELEMENTS = {
-		ROOT:null,
-		HEAD:null,
-		WALL:null,
-		FOOT:null
-	};
-	//事件
-	var EVENTS = {
-		OPEN_EVENT:null,
-		CLOSE_EVENT:null,
-		SWITCH_EVENT:null,
-		TOUTH_EVENT:null
-	};
-	//状态存储
-	var STATE = {
-		BAR_SHOW:true,
-		CURRENT_INDEX:0,
-		PAN_LAST:null
-	};
-	//触屏对象
-	var TOUTH = null;
-	function _initDefault(config){
-		CONFIG.CONTAINER_ID = typeof config.id!='undefined'?config.id:'';
-		CONFIG.TRANS_MODE = typeof config.trans_mode!='undefined' ? config.trans_mode:CONFIG.TRANS_MODE;
-		CONFIG.TRANS_HIDE = typeof config.trans_hide!='undefined' ? config.trans_hide:CONFIG.TRANS_HIDE;
-		CONFIG.AUTO_OPEN = typeof config.auto_open!='undefined' ? config.auto_open:CONFIG.AUTO_OPEN;
-		CONFIG.AUTO_PLAY = typeof config.auto_play!='undefined' ? config.auto_play:CONFIG.AUTO_PLAY;
-		CONFIG.AUTO_PLAY_LIMIT = typeof config.auto_play_limit!='undefined' ? config.auto_play_limit:CONFIG.AUTO_PLAY_LIMIT;
-		CONFIG.DATAS = typeof config.data!='undefined' ? config.data:CONFIG.DATAS;
-		
-		STYLE.WIN_HEIGHT=document.body.offsetHeight;
-		STYLE.WIN_WIDTH = document.body.offsetWidth;
-		
-	  	STYLE.TRANSFORM  = (function () {
+		WIN_WIDTH:0,				//	浏览器宽度
+		WIN_HEIGHT:0,				//	浏览器高度
+		TRANSFORM:(function () {	//	浏览器的变化属性名
 	  		var tmpStyle = document.createElement("div").style;
 	  		var lists = ['t', 'webkitT', 'MozT', 'msT', 'OT'];
 	  		var transform = '';
@@ -82,8 +31,48 @@
 		  			return transform;
 		  		}
 		  	}
-		  	return '';
-	  	}());
+		  	return transform;
+	  	}())
+	};
+	//页面元素
+	var ELEMENTS = {
+		ROOT:null,					//	图片墙-容器根节点
+		HEAD:null,					//	头部工具条
+		WALL:null,					//	图片墙-列表根节点
+		FOOT:null					//	尾部工具条
+	};
+	//事件
+	var EVENTS = {
+		OPEN_EVENT:null,			//	打开时的事件
+		CLOSE_EVENT:null,			//	关闭时的事件
+		SWITCH_EVENT:null,			//	切换图片时的事件
+		TOUTH_EVENT:null			//	点击图片时的事件
+	};
+	//状态存储
+	var STATE = {
+		BAR_SHOW:true,				//	状态栏是否正在显示
+		SCALE_LAST:1,				//	最后一次的SCALE的大小
+		LOCATE_LAST:1,				//	最后一次旋转的大小
+		CURRENT_INDEX:0				//	当前浏览图片的位置
+		
+	};
+	//触屏对象
+	var TOUTH = null;
+	function _initDefault(config){
+		CONFIG.CONTAINER_ID = typeof config.id!='undefined'?config.id:'';
+		CONFIG.AUTO_OPEN = typeof config.auto_open!='undefined' ? config.auto_open:CONFIG.AUTO_OPEN;
+		
+		
+		CONFIG.SCALE = typeof config.scale!='undefined' ? config.scale:CONFIG.SCALE;
+		CONFIG.ROTATE = typeof config.rotate!='undefined' ? config.rotate:CONFIG.ROTATE;
+		
+		CONFIG.AUTO_PLAY = typeof config.auto_play!='undefined' ? config.auto_play:CONFIG.AUTO_PLAY;
+		CONFIG.AUTO_PLAY_LIMIT = typeof config.auto_play_limit!='undefined' ? config.auto_play_limit:CONFIG.AUTO_PLAY_LIMIT;
+		CONFIG.DATAS = typeof config.data!='undefined' ? config.data:CONFIG.DATAS;
+		
+		STYLE.WIN_HEIGHT=document.body.offsetHeight;
+		STYLE.WIN_WIDTH = document.body.offsetWidth;
+		
 		
 		ELEMENTS.ROOT = document.getElementById(config.id);
 	};
@@ -106,23 +95,32 @@
 		ELEMENTS.ROOT.style.height = STYLE.WIN_HEIGHT+'px';
 		ELEMENTS.ROOT.style.width = STYLE.WIN_WIDTH+'px';
 		ELEMENTS.WALL.style.width = STYLE.WIN_WIDTH*CONFIG.DATAS.length+'px';
-		
+	    
+		var wallImgs = '';
+		for(var i=0,j=CONFIG.DATAS.length;i<j;i++){
+			var img = CONFIG.DATAS[i];
+			wallImgs += '<div class="iw_img" style="background-image:url(' + img.imgUrl +');width:'+STYLE.WIN_WIDTH+'px;"></div>';
+		}
+		ELEMENTS.WALL.innerHTML = wallImgs;
+	}
+	function _initEvent(){
 		TOUTH = Hammer(ELEMENTS.WALL);
 		TOUTH.LOCK = false;
 		//点击屏幕
 		var tapHandder = function(evt){
-			if(CONFIG.TRANS_MODE){
-				if(STATE.BAR_SHOW){
-					ELEMENTS.HEAD.style.display='none';
-					ELEMENTS.FOOT.style.display='none';
-					STATE.BAR_SHOW=false;
-				}else{
-					ELEMENTS.HEAD.style.display='block';
-					ELEMENTS.FOOT.style.display='block';
-					STATE.BAR_SHOW=true;
-				}
-				
+			if(STATE.BAR_SHOW){
+				ELEMENTS.HEAD.style.display='none';
+				ELEMENTS.FOOT.style.display='none';
+				STATE.BAR_SHOW=false;
+			}else{
+				ELEMENTS.HEAD.style.display='block';
+				ELEMENTS.FOOT.style.display='block';
+				STATE.BAR_SHOW=true;
 			}
+		}
+		var panHandder = function(evt){
+//			console.log(evt);
+			_self.slightMove(evt.deltaX);
 		}
 		//移动
 		var panendHandder = function(evt){
@@ -135,24 +133,28 @@
 	    	}
 	    	_self.toIndex(index);
 		}
+	    TOUTH.on('tap', tapHandder);
+	    TOUTH.on('pan', panHandder);
+	    TOUTH.on('panend', panendHandder);
+		
+		
 		//放大缩小
-		var pinchendHandder = function(evt){
-			alert(evt.scale);
-			alert('pinchend');
+		var pinchHandder = function(evt){
 		}
-		var rotateendHandder = function(evt){
+		//旋转
+		var rotateHandder = function(evt){
 			alert(evt.rotation);
-			alert('rotateend');
+//			alert('rotateend');
 		}
 		
 		var defaultAction  = function(evt){
 			alert(evt.type);
 		}
-		alert(2);
-		var pinch = new Hammer.Pinch();
-		var rotate = new Hammer.Rotate();
+
+//		var pinch = new Hammer.Pinch();
+//		var rotate = new Hammer.Rotate();
 //		pinch.recognizeWith(rotate);
-		TOUTH.add([pinch, rotate]);
+//		TOUTH.add([pinch, rotate]);
 		
 //	    TOUTH.on('pinchstart', defaultAction);
 //	    TOUTH.on('pinchmove', defaultAction);
@@ -166,22 +168,14 @@
 //	    TOUTH.on('rotateend', defaultAction);
 //	    TOUTH.on('rotatecancel', defaultAction);
 	    
-	    TOUTH.on('tap', tapHandder);
-	    TOUTH.on('panend', panendHandder);
-	    TOUTH.on('pinchend', pinchendHandder);
-	    TOUTH.on('rotateend', rotateendHandder);
-	    
-		var wallImgs = '';
-		for(var i=0,j=CONFIG.DATAS.length;i<j;i++){
-			var img = CONFIG.DATAS[i];
-			wallImgs += '<div class="iw_img" style="background-image:url(' + img.imgUrl +');width:'+STYLE.WIN_WIDTH+'px;"></div>';
-		}
-		ELEMENTS.WALL.innerHTML = wallImgs;
+//	    TOUTH.on('pinchend', pinchendHandder);
+//	    TOUTH.on('rotateend', rotateendHandder);		
 	}
 	function stepup(){
 		_buildHTML();
+		_initEvent();
 		if(CONFIG.AUTO_OPEN){
-//			_self.open();
+			_self.open();
 		}
 	};
 	var ImgWall = function(config){
@@ -194,13 +188,26 @@
 	}
 
 	ImgWall.prototype = {
+		slightMove:function(offset){
+			ELEMENTS.WALL.style[STYLE.TRANSFORM] = 'translate(-'+(STYLE.WIN_WIDTH*STATE.CURRENT_INDEX - offset)+'px)';
+		},
 		toIndex:function(index){
 			STATE.CURRENT_INDEX = index%CONFIG.DATAS.length;
 			ELEMENTS.WALL.style[STYLE.TRANSFORM] = 'translate(-'+STYLE.WIN_WIDTH*STATE.CURRENT_INDEX+'px)';
 		},
-		open:function(){
-			alert('open');
+		//放大、缩小、旋转
+		resize:function(scale,rotate){
+			
 		},
+		//移动
+		translate:function(x,y){
+			
+		},
+		//打开
+		open:function(){
+//			alert('open');
+		},
+		//关闭
 		close:function(){
 			
 		},
