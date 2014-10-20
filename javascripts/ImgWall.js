@@ -139,8 +139,17 @@
 	    	}
 	    	_self.toIndex(index);
 		}
+		//放大缩小
+		var pinchendHandder = function(evt){
+			alert('pinchend');
+		}
+		var rotateendHandder = function(evt){
+			alert('rotateend');
+		}
 	    TOUTH.on('tap', tapHandder);
 	    TOUTH.on('panend', panendHandder);
+	    TOUTH.on('pinchend', pinchendHandder);
+	    TOUTH.on('rotateend', rotateendHandder);
 	    
 		var wallImgs = '';
 		for(var i=0,j=CONFIG.DATAS.length;i<j;i++){
@@ -157,10 +166,11 @@
 	};
 	var ImgWall = function(config){
 		_self=this;
+		//有些手机浏览器有BUG（加载时获得的宽高不正确），给点延时
 		window.setTimeout(function(){
 			_initDefault(config);
 			stepup();
-		},100)
+		},50)
 	}
 
 	ImgWall.prototype = {
