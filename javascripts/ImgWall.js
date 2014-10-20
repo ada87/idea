@@ -106,8 +106,8 @@
 		}
 		//移动
 		var panendHandder = function(evt){
-			console.log(evt);
-			debug(evt);
+//			console.log(evt);
+			alert(evt.deltaX);
 	    	if(evt.deltaX<0){
 	    		var index = STATE.CURRENT_INDEX-1;
 	    		index = index<0?0:index;
