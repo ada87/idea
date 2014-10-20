@@ -146,6 +146,12 @@
 		var defaultAction  = function(evt){
 			alert(evt.type);
 		}
+
+		var pinch = new Hammer.Pinch();
+		var rotate = new Hammer.Rotation();
+		pinch.recognizeWith(rotate);
+		TOUTH.add([pinch, rotate]);
+		
 	    TOUTH.on('pinchstart', defaultAction);
 	    TOUTH.on('pinchmove', defaultAction);
 	    TOUTH.on('pinchend', defaultAction);
