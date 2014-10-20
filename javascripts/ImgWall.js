@@ -15,7 +15,9 @@
 		alert(str);
 //		console.log(o);
 	}
+	//单例模式
 	var _self = null;
+	//配置及数据存放
 	var CONFIG = {
 		CONTAINER_ID : '',
 		TRANS_MODE : true,
@@ -25,7 +27,9 @@
 		AUTO_PLAY_LIMIT : 0,
 		DATAS:[]
 	};
+	//计算样式的数据
 	var STYLE = {
+		TRANSFORM:'transform',
 		WIN_WIDTH:0,
 		WIN_HEIGHT:0,
 		OPACTIY:'0.5',
@@ -34,23 +38,27 @@
 		HEAD_BG:'#4B4B4B',
 		HEAD_HEIGHT:'3em'
 	};
+	//页面元素
 	var ELEMENTS = {
 		ROOT:null,
 		HEAD:null,
 		WALL:null,
 		FOOT:null
 	};
+	//事件
 	var EVENTS = {
 		OPEN_EVENT:null,
 		CLOSE_EVENT:null,
 		SWITCH_EVENT:null,
 		TOUTH_EVENT:null
 	};
+	//状态存储
 	var STATE = {
 		BAR_SHOW:true,
 		CURRENT_INDEX:0,
 		PAN_LAST:null
 	};
+	//触屏对象
 	var TOUTH = null;
 	function _initDefault(config){
 		CONFIG.CONTAINER_ID = typeof config.id!='undefined'?config.id:'';
@@ -64,6 +72,20 @@
 		
 		STYLE.WIN_HEIGHT=document.body.offsetHeight;
 		STYLE.WIN_WIDTH = document.body.offsetWidth;
+		
+	  	var elementStyle = document.createElement("div").style;
+	  	STYLE.TRANSFORM  = (function () {
+	  		var lists = ['t', 'webkitT', 'MozT', 'msT', 'OT'];
+	  		var transform;
+		  	for (var i = 0, iLen = lists.length; i < iLen; i++) {
+		  		transform = lists[i] + 'ransform';
+		  		if (transform in elementStyle) {
+		  			return lists[i].substr(0, lists[i].length - 1);
+		  		}
+		  	}
+		  	return false;
+	  	}())+STYLE.TRANSFORM ;
+	  	alert(STYLE.TRANSFORM);
 		
 		ELEMENTS.ROOT = document.getElementById(config.id);
 	};
@@ -106,9 +128,7 @@
 		}
 		//移动
 		var panendHandder = function(evt){
-//			console.log(evt);
-			alert(evt.deltaX);
-	    	if(evt.deltaX<0){
+	    	if(evt.deltaX > 0){
 	    		var index = STATE.CURRENT_INDEX-1;
 	    		index = index<0?0:index;
 	    	}else{
@@ -142,7 +162,7 @@
 	ImgWall.prototype = {
 		toIndex:function(index){
 			STATE.CURRENT_INDEX = index%CONFIG.DATAS.length;
-			ELEMENTS.WALL.style.transform = 'translate(-'+STYLE.WIN_WIDTH*STATE.CURRENT_INDEX+'px)';
+			ELEMENTS.WALL.style[STYLE.TRANSFORM] = 'translate(-'+STYLE.WIN_WIDTH*STATE.CURRENT_INDEX+'px)';
 		},
 		open:function(){
 			alert('open');
