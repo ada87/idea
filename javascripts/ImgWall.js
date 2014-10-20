@@ -70,8 +70,12 @@
 		CONFIG.DATAS = typeof config.data!='undefined' ? config.data:CONFIG.DATAS;
 		
 		alert(document.body.offsetWidth);
-		
 		alert(document.body.offsetHeight);
+		alert(document.body.offsetWidth);
+		alert(document.body.offsetHeight);
+		
+		
+		
 		STYLE.WIN_HEIGHT=document.body.offsetHeight;
 		STYLE.WIN_WIDTH = document.body.offsetWidth;
 		
