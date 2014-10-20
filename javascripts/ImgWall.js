@@ -73,18 +73,18 @@
 		STYLE.WIN_HEIGHT=document.body.offsetHeight;
 		STYLE.WIN_WIDTH = document.body.offsetWidth;
 		
-	  	var elementStyle = document.createElement("div").style;
 	  	STYLE.TRANSFORM  = (function () {
+	  		var tmpStyle = document.createElement("div").style;
 	  		var lists = ['t', 'webkitT', 'MozT', 'msT', 'OT'];
-	  		var transform;
+	  		var transform = '';
 		  	for (var i = 0, iLen = lists.length; i < iLen; i++) {
 		  		transform = lists[i] + 'ransform';
-		  		if (transform in elementStyle) {
-		  			return lists[i].substr(0, lists[i].length - 1) + 'Transform';
+		  		if (transform in tmpStyle) {
+		  			return transform;
 		  		}
 		  	}
-		  	return false;
-	  	}()) || STYLE.TRANSFORM;
+		  	return '';
+	  	}());
 		
 		ELEMENTS.ROOT = document.getElementById(config.id);
 	};
