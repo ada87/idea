@@ -148,7 +148,7 @@
 		var defaultAction  = function(evt){
 			alert(evt.type);
 		}
-
+		alert(2);
 		var pinch = new Hammer.Pinch();
 		var rotate = new Hammer.Rotate();
 //		pinch.recognizeWith(rotate);
