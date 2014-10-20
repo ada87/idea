@@ -69,10 +69,6 @@
 		CONFIG.AUTO_PLAY_LIMIT = typeof config.auto_play_limit!='undefined' ? config.auto_play_limit:CONFIG.AUTO_PLAY_LIMIT;
 		CONFIG.DATAS = typeof config.data!='undefined' ? config.data:CONFIG.DATAS;
 		
-		alert(document.body.offsetWidth);
-		alert(document.body.offsetHeight);
-		
-		
 		STYLE.WIN_HEIGHT=document.body.offsetHeight;
 		STYLE.WIN_WIDTH = document.body.offsetWidth;
 		
@@ -146,6 +142,22 @@
 		var rotateendHandder = function(evt){
 			alert('rotateend');
 		}
+		
+		var defaultAction  = function(evt){
+			alert(evt.type);
+		}
+	    TOUTH.on('pinchstart', defaultAction);
+	    TOUTH.on('pinchmove', defaultAction);
+	    TOUTH.on('pinchend', defaultAction);
+	    TOUTH.on('pinchcancel', defaultAction);
+	    TOUTH.on('pinchin', defaultAction);
+	    TOUTH.on('pinchout', defaultAction);
+	    
+	    TOUTH.on('rotatestart', defaultAction);
+	    TOUTH.on('rotatemove', defaultAction);
+	    TOUTH.on('rotateend', defaultAction);
+	    TOUTH.on('rotatecancel', defaultAction);
+	    
 	    TOUTH.on('tap', tapHandder);
 	    TOUTH.on('panend', panendHandder);
 	    TOUTH.on('pinchend', pinchendHandder);
