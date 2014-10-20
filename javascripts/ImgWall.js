@@ -69,7 +69,9 @@
 		CONFIG.AUTO_PLAY_LIMIT = typeof config.auto_play_limit!='undefined' ? config.auto_play_limit:CONFIG.AUTO_PLAY_LIMIT;
 		CONFIG.DATAS = typeof config.data!='undefined' ? config.data:CONFIG.DATAS;
 		
+		alert(document.body.offsetWidth);
 		
+		alert(document.body.offsetHeight);
 		STYLE.WIN_HEIGHT=document.body.offsetHeight;
 		STYLE.WIN_WIDTH = document.body.offsetWidth;
 		
