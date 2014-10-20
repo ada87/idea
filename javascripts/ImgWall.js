@@ -137,9 +137,11 @@
 		}
 		//放大缩小
 		var pinchendHandder = function(evt){
+			alert(evt.scale);
 			alert('pinchend');
 		}
 		var rotateendHandder = function(evt){
+			alert(evt.rotation);
 			alert('rotateend');
 		}
 		
@@ -152,17 +154,17 @@
 		pinch.recognizeWith(rotate);
 		TOUTH.add([pinch, rotate]);
 		
-	    TOUTH.on('pinchstart', defaultAction);
-	    TOUTH.on('pinchmove', defaultAction);
-	    TOUTH.on('pinchend', defaultAction);
-	    TOUTH.on('pinchcancel', defaultAction);
-	    TOUTH.on('pinchin', defaultAction);
-	    TOUTH.on('pinchout', defaultAction);
-	    
-	    TOUTH.on('rotatestart', defaultAction);
-	    TOUTH.on('rotatemove', defaultAction);
-	    TOUTH.on('rotateend', defaultAction);
-	    TOUTH.on('rotatecancel', defaultAction);
+//	    TOUTH.on('pinchstart', defaultAction);
+//	    TOUTH.on('pinchmove', defaultAction);
+//	    TOUTH.on('pinchend', defaultAction);
+//	    TOUTH.on('pinchcancel', defaultAction);
+//	    TOUTH.on('pinchin', defaultAction);
+//	    TOUTH.on('pinchout', defaultAction);
+//	    
+//	    TOUTH.on('rotatestart', defaultAction);
+//	    TOUTH.on('rotatemove', defaultAction);
+//	    TOUTH.on('rotateend', defaultAction);
+//	    TOUTH.on('rotatecancel', defaultAction);
 	    
 	    TOUTH.on('tap', tapHandder);
 	    TOUTH.on('panend', panendHandder);
