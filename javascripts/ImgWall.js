@@ -12,8 +12,8 @@
 				str+=i+':'+o[i]+'\n';
 			}
 		}
-//		alert(str);
-		console.log(o);
+		alert(str);
+//		console.log(o);
 	}
 	var _self = null;
 	var CONFIG = {
