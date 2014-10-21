@@ -27,6 +27,7 @@
 		  		width: 100%;
 		  		height: 100%;
 		  		font-size: 1.8em;
+		  		display: none;
 		  	}
 		  	.iw_container .iw_header,
 		  	.iw_container .iw_footer{
@@ -42,8 +43,23 @@
 		  		width: 100%;
 		  		z-index:999;
 		  	}
+		  	.iw_container .iw_header .iw_close{
+		  		padding-left: 0.5em;
+		  	}
 		  	.iw_container .iw_footer{
 		  		bottom: 0;
+		  		text-align:center;
+		  	}
+		  	.iw_container .iw_footer div{
+		  		height: 100%;
+		  		width: 49%;
+		  		text-align:center;
+		  		color: #ffffff;
+		  		display: inline-block;
+		  		border-left: 1px solid #D1D1D1;
+		  	}
+		  	.iw_container .iw_footer div.iw_frist{
+		  		border-left: none;
 		  	}
 		  	.iw_container .iw_wall{
 		  		background-color: #666666;
@@ -54,39 +70,45 @@
 		  	.iw_container .iw_wall .iw_wall_ct{
 		  		height: 100%;
 		  		display: block;
-		  		transition: all 1s;
-		  		-moz-transition: all 1s;
-				-webkit-transition: all 1s;
-				-o-transition: all 1s;
 		  	}
 		  	.iw_container .iw_wall .iw_wall_ct .iw_img{
-			    height: 100%;
 			    float: left;
+			    height: 100%;
+			    overflow: hidden;
+		  	}
+		  	.iw_container .iw_wall .iw_wall_ct .iw_img div{
 			    background-size:contain;
 		  		background-position: center center ;
 		  		background-repeat: no-repeat;
+			    height: 100%;
+			    width: 100%;
 		  	}
 		  </style>
 	</head>
-	<body>
+	<body scroll="no" style="overflow:hidden">
 		<div id="imgWall" class="adf"></div>
-		
+		<div id="open_imgwall" style="margin: 0px auto;width: 50%; height: 200px;border: 1px solid#000080;" onclick="imgWall.open()">打开图片</div>
 		<script type="text/javascript">
 			var testFiles = [
 				{
-					imgUrl:'http://221.226.48.130:2426/storageWeb/servlet/GetFileByURLServlet?root=/mnt/dir&fileid=06f281f62fa4981aa4029b852acb6a325a.jpg&ct=1&type=1&code=55A1404D5B84114DB333C2D9644F455D1547D86AB825A2E2EB01695812CA52E9&exp=32720&account=MTM3MTA2NDkyNjQ=&p=0&ui=0411WD7m000I&ci=0411WD7m000I018201410161712521kp&cn=Tulips&oprChannel=10200500&dom=D0010'
+					imgUrl:'http://221.226.48.130:2426/storageWeb/servlet/GetFileByURLServlet?root=/mnt/dir&fileid=06f281f62fa4981aa4029b852acb6a325a.jpg&ct=1&type=1&code=55A1404D5B84114DB333C2D9644F455D1547D86AB825A2E2EB01695812CA52E9&exp=32720&account=MTM3MTA2NDkyNjQ=&p=0&ui=0411WD7m000I&ci=0411WD7m000I018201410161712521kp&cn=Tulips&oprChannel=10200500&dom=D0010',
+					size:'310KB'
 				},
 				{
-					imgUrl:'http://221.226.48.130:2426/storageWeb/servlet/GetFileByURLServlet?root=/mnt/dir&fileid=07ad51ba5b900210b6594d9baf8774f046.jpg&ct=1&type=1&code=F0A22BD0056B5726B53F27B0BC2378EEE711064710BF84CEB3433D9D64645386&exp=32720&account=MTM3MTA2NDkyNjQ=&p=0&ui=0411WD7m000I&ci=0411WD7m000I018201410161712501kn&cn=Lighthouse&oprChannel=10200500&dom=D0010'
+					imgUrl:'http://221.226.48.130:2426/storageWeb/servlet/GetFileByURLServlet?root=/mnt/dir&fileid=07ad51ba5b900210b6594d9baf8774f046.jpg&ct=1&type=1&code=F0A22BD0056B5726B53F27B0BC2378EEE711064710BF84CEB3433D9D64645386&exp=32720&account=MTM3MTA2NDkyNjQ=&p=0&ui=0411WD7m000I&ci=0411WD7m000I018201410161712501kn&cn=Lighthouse&oprChannel=10200500&dom=D0010',
+					size:'470KB'
 				},
 				{
-					imgUrl:'http://221.226.48.130:2426/storageWeb/servlet/GetFileByURLServlet?root=/mnt/dir&fileid=00fc594a03528eefb0898a1bf480f8b252.jpg&ct=1&type=1&code=C71C5B5F71F256287CE627398F8264EBBD46645428943F1D95E591BC264AD559&exp=32720&account=MTM3MTA2NDkyNjQ=&p=0&ui=0411WD7m000I&ci=0411WD7m000I018201410161712491km&cn=Koala&oprChannel=10200500&dom=D0010'
+					imgUrl:'http://221.226.48.130:2426/storageWeb/servlet/GetFileByURLServlet?root=/mnt/dir&fileid=00fc594a03528eefb0898a1bf480f8b252.jpg&ct=1&type=1&code=C71C5B5F71F256287CE627398F8264EBBD46645428943F1D95E591BC264AD559&exp=32720&account=MTM3MTA2NDkyNjQ=&p=0&ui=0411WD7m000I&ci=0411WD7m000I018201410161712491km&cn=Koala&oprChannel=10200500&dom=D0010',
+					size:'1.27MB'
 				},
 				{
-					imgUrl:'http://221.226.48.130:2426/storageWeb/servlet/GetFileByURLServlet?root=/mnt/dir&fileid=052328fda402a1b89b75e9cc3b12ecc0a1.jpg&ct=1&type=1&code=C82EC341281BCC3EBA1000968DCFE966F959EA3A20B420333ED2E7FAAB8FB4D9&exp=32720&account=MTM3MTA2NDkyNjQ=&p=0&ui=0411WD7m000I&ci=0411WD7m000I018201410161712431kj&cn=Desert&oprChannel=10200500&dom=D0010'
+					imgUrl:'http://221.226.48.130:2426/storageWeb/servlet/GetFileByURLServlet?root=/mnt/dir&fileid=052328fda402a1b89b75e9cc3b12ecc0a1.jpg&ct=1&type=1&code=C82EC341281BCC3EBA1000968DCFE966F959EA3A20B420333ED2E7FAAB8FB4D9&exp=32720&account=MTM3MTA2NDkyNjQ=&p=0&ui=0411WD7m000I&ci=0411WD7m000I018201410161712431kj&cn=Desert&oprChannel=10200500&dom=D0010',
+					size:'2MB'
 				},
 				{
-					imgUrl:'http://221.226.48.130:2426/storageWeb/servlet/GetFileByURLServlet?root=/mnt/dir&fileid=042e5bbdbf2cf11dffd0ec2a06a9c120be.jpg&ct=1&type=1&code=9A027697ED146D7ED0BBB49B36AED24AE6D005328A1E25E11604B91C325AB060&exp=32720&account=MTM3MTA2NDkyNjQ=&p=0&ui=0411WD7m000I&ci=0411WD7m000I018201410161712381ki&cn=Chrysanthemum&oprChannel=10200500&dom=D0010'
+					imgUrl:'http://221.226.48.130:2426/storageWeb/servlet/GetFileByURLServlet?root=/mnt/dir&fileid=042e5bbdbf2cf11dffd0ec2a06a9c120be.jpg&ct=1&type=1&code=9A027697ED146D7ED0BBB49B36AED24AE6D005328A1E25E11604B91C325AB060&exp=32720&account=MTM3MTA2NDkyNjQ=&p=0&ui=0411WD7m000I&ci=0411WD7m000I018201410161712381ki&cn=Chrysanthemum&oprChannel=10200500&dom=D0010',
+					size:'15KB'
 				}
 			];
 			/**
@@ -96,19 +118,40 @@
 			 * 		data			:		图片数据：至少包括图片地址
 			 * 		scale			:		是否可放大缩小，默认true
 			 * 		rotate			:		是否可旋转,默认false,只有开启scale的情况下才能开启rotate
-			 * 		evt_open		:		打开时的方法,也可以通过onOpen(fn)设置
-			 * 		evt_Back		:		关闭时的方法，也可以通过onBack(fn)设置
-			 * 		evt_switch		:		切换时的方法，也可以通过onSwitch(fn)设置
+			 * 		evt_Open		:		打开时的方法,也可以通过onOpen(fn)设置
+			 * 		evt_Close		:		关闭时的方法，也可以通过onBack(fn)设置
+			 * 		evt_Switch		:		切换时的方法，也可以通过onSwitch(fn)设置
 			 * 		auto_open		:		是否自动打开，默认为true
-			 * 		auto_play		:		是否自动播放,默认为false
-			 * 		auto_play_limit	:		自动播放时间间隔，单位微秒，默认为5000（5秒），但在auto_play为true时有效
-			 * 		
 			 * 		
 			 * */
 			var imgWall = new ImgWall({
 				'id':'imgWall',
-				'data': testFiles
+				'data': testFiles,
+				auto_open:false,
+				evt_Switch:function(data){
+					upSize(data);
+				},
+				evt_Open:function(){
+					document.getElementById('open_imgwall').style.display='none';
+					upSize(testFiles[0]);
+				},
+				evt_Close:function(){
+					document.getElementById('open_imgwall').style.display='block';
+				}
 			});
+			
+			var upSize = function(data){
+				document.getElementById('btn_down').innerHTML='下载(' + data.size + ')';
+			}
+			
+			var downAction=function(evt,data){
+				console.log(data);
+			}
+			var shareAction=function(evt,data){
+				console.log(data);
+			}
+			imgWall.addAction('<span id="btn_down">下载</span>',downAction);
+			imgWall.addAction('分享',shareAction);
 		</script>
 	</body>
 </html>
