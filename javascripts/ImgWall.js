@@ -74,10 +74,17 @@
 		_self.onOpen(config.evt_Open);
 		_self.onClose(config.evt_Close);
 		_self.onSwitch(config.evt_Switch);
-//		document.documentElement.clientHeight
-		STYLE.WIN_HEIGHT=document.body.offsetHeight;
-		STYLE.WIN_WIDTH = document.body.offsetWidth;
 		
+		STYLE.ORGIN_HEIGHT = document.documentElement.style.height;
+		if(STYLE.ORGIN_HEIGHT==''){
+			//HTML5的高度BUG
+			document.documentElement.style.height='100%';
+		}
+		STYLE.ORGIN_OVERFLOW = document.documentElement.style.overflow;
+		STYLE.ORGIN_OFFSET = [document.documentElement.scrollLeft,document.documentElement.scrollTop];
+		
+		STYLE.WIN_HEIGHT=document.documentElement.offsetHeight;
+		STYLE.WIN_WIDTH = document.documentElement.offsetWidth;
 		
 		ELEMENTS.ROOT = document.getElementById(config.id);
 	};
@@ -88,7 +95,7 @@
 			ELEMENTS.ROOT=document.createElement('article');
 			document.body.appendChild(ELEMENTS.ROOT);
 		}
-		var headerHTML = '<section class="iw_header" id="'+hid+'"><span class="iw_close" id="iw_close">&lt; 返回</span></section>';
+		var headerHTML = '<section class="iw_header" id="'+hid+'"><span class="iw_close" id="iw_close">&lt; 返回</span><span class="iw_title" id="iw_title"></span></section>';
 		var wallHTML = '<section class="iw_wall"><div id="'+wid+'" class="iw_wall_ct"></div></section>';
 		var footHTML = '<section class="iw_footer" id="'+fid+'"></section>';
 		ELEMENTS.ROOT.innerHTML = headerHTML+wallHTML+footHTML;
@@ -218,23 +225,35 @@
 			STATE.ROTATE_LAST = /rotate\(([\.\d]+)deg\)/.exec(sty)?RegExp.$1:0;
 			STATE.X_LAST = STATE.X_TMP =  /translateX\((\d+)px\)/.exec(sty)?RegExp.$1:0;
 			STATE.Y_LAST = STATE.Y_TMP =  /translateY\((\d+)px\)/.exec(sty)?RegExp.$1:0;
-			if(EVENTS.SWITCH_EVENT){
-				EVENTS.SWITCH_EVENT.call(this,CONFIG.DATAS[STATE.CURRENT_INDEX]);
-			}
+			this.change();
 		},
 		//单图模式：放大、缩小、旋转、轻移
 		transition:function(){
 			ELEMENTS.IMG.style[STYLE.TRANSFORM] ='scale(' + STATE.ZOOM_LAST + ') rotate('+ STATE.ROTATE_LAST +'deg) translateX('+ STATE.X_TMP + 'px) translateY(' + STATE.Y_TMP + 'px)';
 		},
+		change:function(){
+			var title = CONFIG.DATAS[STATE.CURRENT_INDEX]['imgTitle']||'';
+			document.getElementById('iw_title').innerHTML = title;
+			if(EVENTS.SWITCH_EVENT){
+				EVENTS.SWITCH_EVENT.call(this,CONFIG.DATAS[STATE.CURRENT_INDEX]);
+			}
+		},
 		//打开
 		open:function(){
+			window.scroll(0,0);
+			document.documentElement.style.height = STYLE.WIN_HEIGHT;
+			document.documentElement.style.overflow = 'hidden';
 			ELEMENTS.ROOT.style.display = 'block';
 			if(EVENTS.OPEN_EVENT){
-				window.setTimeout(EVENTS.OPEN_EVENT,3);
+				window.setTimeout(EVENTS.OPEN_EVENT,3);			
+				this.change();
 			}
 		},
 		//关闭
 		close:function(){
+			document.documentElement.style.height = STYLE.ORGIN_HEIGHT;
+			document.documentElement.style.overflow = STYLE.ORGIN_OVERFLOW;
+			window.scroll(STYLE.ORGIN_OFFSET[0] ,STYLE.ORGIN_OFFSET[1]);
 			ELEMENTS.ROOT.style.display = 'none';
 			if(EVENTS.CLOSE_EVENT){
 				EVENTS.CLOSE_EVENT.call(this);
