@@ -107,7 +107,7 @@
 		var wallImgs = '';
 		for(var i=0,j=CONFIG.DATAS.length;i<j;i++){
 			var img = CONFIG.DATAS[i];
-			wallImgs += '<div class="iw_img" style="width:'+STYLE.WIN_WIDTH+'px;"><div id="iw_img_' + i + '" style="background-image:url(' + img.imgUrl +');"></div> </div>';
+			wallImgs += '<div class="iw_img" style="width:'+STYLE.WIN_WIDTH+'px;"><div id="iw_img_' + i + '"><div style="background-image:url(' + img.imgUrl +');"></div></div> </div>';
 		}
 		ELEMENTS.WALL.innerHTML = wallImgs;
 		ELEMENTS.IMG = document.getElementById('iw_img_0');
@@ -129,7 +129,7 @@
 		var panMoveHandder = function(evt){
 			if(STATE.ZOOM_LAST > 1){
 				STATE.X_TMP = STATE.X_LAST+ evt.deltaX;
-				STATE.Y_TMP = STATE.X_LAST+ evt.deltaY;
+				STATE.Y_TMP = STATE.Y_LAST+ evt.deltaY;
 				_self.transition();
 			}else{
 				_self.slightMove( 0 - evt.deltaX);
@@ -162,6 +162,7 @@
 			STATE.ZOOM_LAST=STATE.ZOOM_LAST>CONFIG.SCALE_MIN?STATE.ZOOM_LAST:CONFIG.SCALE_MIN;
 			STATE.ZOOM_LAST = STATE.ZOOM_LAST>CONFIG.SCALE_MAX?CONFIG.SCALE_MAX:STATE.ZOOM_LAST;
 			STATE.ROTATE_LAST=CONFIG.ROTATE?evt.rotation:0;
+//			alert(STATE.ROTATE_LAST);
 			_self.transition();
 		}
 		var pinchendHandder = function(evt){
@@ -230,12 +231,17 @@
 		//单图模式：放大、缩小、旋转、轻移
 		transition:function(){
 			this.setTranTime(ELEMENTS.IMG,0);
-			ELEMENTS.IMG.style[STYLE.TRANSFORM] ='scale(' + STATE.ZOOM_LAST + ') rotate('+ STATE.ROTATE_LAST +'deg) translateX('+ STATE.X_TMP + 'px) translateY(' + STATE.Y_TMP + 'px)';
+			this.setTranTime(ELEMENTS.IMG.firstChild,0);
+			ELEMENTS.IMG.style[STYLE.TRANSFORM] ='scale(' + STATE.ZOOM_LAST + ') translateX('+ STATE.X_TMP + 'px) translateY(' + STATE.Y_TMP + 'px)';
+			ELEMENTS.IMG.firstChild.style[STYLE.TRANSFORM] ='rotate('+ STATE.ROTATE_LAST +'deg) ';
 		},
 		//单图模式：还原
 		restore:function(){
 			this.setTranTime(ELEMENTS.IMG,CONFIG.TRAN_TIME);
-			ELEMENTS.IMG.style[STYLE.TRANSFORM] ='scale(' + STATE.ZOOM_LAST + ') rotate('+ STATE.ROTATE_LAST +'deg) translateX('+ STATE.X_TMP + 'px) translateY(' + STATE.Y_TMP + 'px)';
+			this.setTranTime(ELEMENTS.IMG.firstChild,CONFIG.TRAN_TIME);
+			ELEMENTS.IMG.style[STYLE.TRANSFORM] ='scale(' + STATE.ZOOM_LAST + ') translateX('+ STATE.X_TMP + 'px) translateY(' + STATE.Y_TMP + 'px)';
+			ELEMENTS.IMG.firstChild.style[STYLE.TRANSFORM] ='rotate('+ STATE.ROTATE_LAST +'deg) ';
+			
 		},
 		change:function(){
 			var title = CONFIG.DATAS[STATE.CURRENT_INDEX]['imgTitle']||'';
