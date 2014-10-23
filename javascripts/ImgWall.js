@@ -126,10 +126,10 @@
 				STATE.BAR_SHOW=true;
 			}
 		}
-		var panHandder = function(evt){
+		var panMoveHandder = function(evt){
 			if(STATE.ZOOM_LAST > 1){
-				STATE.X_TMP = STATE.X_LAST + evt.deltaX;
-				STATE.Y_TMP = STATE.Y_LAST + evt.deltaY;
+				STATE.X_TMP = STATE.X_LAST+ evt.deltaX;
+				STATE.Y_TMP = STATE.X_LAST+ evt.deltaY;
 				_self.transition();
 			}else{
 				_self.slightMove( 0 - evt.deltaX);
@@ -153,7 +153,7 @@
 			}
 		}
 	    TOUTH.on('tap', tapHandder);
-	    TOUTH.on('pan', panHandder);
+	    TOUTH.on('panmove', panMoveHandder);
 	    TOUTH.on('panend', panendHandder);
 		
 		//放大缩小
@@ -223,8 +223,8 @@
 			var sty = ELEMENTS.IMG.style[STYLE.TRANSFORM];
 			STATE.ZOOM_LAST = /scale\(([\.\d]+)\)/.exec(sty)?RegExp.$1:0;
 			STATE.ROTATE_LAST = /rotate\(([\.\d]+)deg\)/.exec(sty)?RegExp.$1:0;
-			STATE.X_LAST = STATE.X_TMP =  /translateX\((\d+)px\)/.exec(sty)?RegExp.$1:0;
-			STATE.Y_LAST = STATE.Y_TMP =  /translateY\((\d+)px\)/.exec(sty)?RegExp.$1:0;
+			STATE.X_LAST = STATE.X_TMP =  parseInt(/translateX\((\d+)px\)/.exec(sty)?RegExp.$1:0);
+			STATE.Y_LAST = STATE.Y_TMP =  parseInt(/translateY\((\d+)px\)/.exec(sty)?RegExp.$1:0);
 			this.change();
 		},
 		//单图模式：放大、缩小、旋转、轻移
