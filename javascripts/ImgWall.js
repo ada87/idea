@@ -24,6 +24,7 @@
 		MIN_CROSS:50,				//	图片最小移动距离
 		SCALE:true,					//	开启放大缩小
 		ROTATE:true,				//	开启旋转
+		SCALE_MIN:0.5,				//	最小可缩小的级别
 		SCALE_MAX:3,				//	最大可放大的级别
 		AUTO_OPEN : true,			//	自动启动,如果设为false，只会new一个imgwall,手动调用一下imgwall.open方法即可打开
 		TRAN_TIME:1,				//	切换过渡时间（秒）
@@ -61,20 +62,16 @@
 		Y_TMP:0,					//	Y轴偏移
 		CURRENT_INDEX:0				//	当前浏览图片的位置
 	};
-	
+	//解析配置
 	function _initDefault(config){
 		CONFIG.CONTAINER_ID = typeof config.id!='undefined'?config.id:'';
 		CONFIG.AUTO_OPEN = typeof config.auto_open!='undefined' ? config.auto_open:CONFIG.AUTO_OPEN;
-		
 		CONFIG.SCALE = typeof config.scale!='undefined' ? config.scale:CONFIG.SCALE;
 		CONFIG.ROTATE = typeof config.rotate!='undefined' ? config.rotate:CONFIG.ROTATE;
-		
 		CONFIG.DATAS = typeof config.data!='undefined' ? config.data:CONFIG.DATAS;
-		
 		_self.onOpen(config.evt_Open);
 		_self.onClose(config.evt_Close);
 		_self.onSwitch(config.evt_Switch);
-		
 		STYLE.ORGIN_HEIGHT = document.documentElement.style.height;
 		if(STYLE.ORGIN_HEIGHT==''){
 			//HTML5的高度BUG
@@ -82,14 +79,12 @@
 		}
 		STYLE.ORGIN_OVERFLOW = document.documentElement.style.overflow;
 		STYLE.ORGIN_OFFSET = [document.documentElement.scrollLeft,document.documentElement.scrollTop];
-		
 		STYLE.WIN_HEIGHT=document.documentElement.offsetHeight;
 		STYLE.WIN_WIDTH = document.documentElement.offsetWidth;
-		
 		ELEMENTS.ROOT = document.getElementById(config.id);
 	};
+	//	DOM元素构造
 	function _buildHTML(){
-//		delete Hammer.defaults.cssProps.userSelect;
 		var hid = CONFIG.CONTAINER_ID+'_header', wid = CONFIG.CONTAINER_ID+'_wall', fid = CONFIG.CONTAINER_ID+'_footer';
 		if(ELEMENTS.ROOT==null){
 			ELEMENTS.ROOT=document.createElement('article');
@@ -102,16 +97,13 @@
 		ELEMENTS.HEAD = document.getElementById(hid);
 		ELEMENTS.WALL = document.getElementById(wid);
 		ELEMENTS.FOOT = document.getElementById(fid);
-		
 		ELEMENTS.ROOT.className+=' iw_container';
 		ELEMENTS.ROOT.style.height = STYLE.WIN_HEIGHT+'px';
 		ELEMENTS.ROOT.style.width = STYLE.WIN_WIDTH+'px';
 		ELEMENTS.WALL.style.width = STYLE.WIN_WIDTH*CONFIG.DATAS.length+'px';
-	    
 	    document.getElementById('iw_close').addEventListener('click',function(){
 	    	_self.close();
 	    });
-	    
 		var wallImgs = '';
 		for(var i=0,j=CONFIG.DATAS.length;i<j;i++){
 			var img = CONFIG.DATAS[i];
@@ -167,12 +159,20 @@
 		//放大缩小
 		var pinchHandder = function(evt){
 			STATE.ZOOM_LAST*=Math.sqrt(Math.sqrt(Math.sqrt(evt.scale)));
-			STATE.ZOOM_LAST=STATE.ZOOM_LAST>1?STATE.ZOOM_LAST:1;
+			STATE.ZOOM_LAST=STATE.ZOOM_LAST>CONFIG.SCALE_MIN?STATE.ZOOM_LAST:CONFIG.SCALE_MIN;
 			STATE.ZOOM_LAST = STATE.ZOOM_LAST>CONFIG.SCALE_MAX?CONFIG.SCALE_MAX:STATE.ZOOM_LAST;
 			STATE.ROTATE_LAST=CONFIG.ROTATE?evt.rotation:0;
 			_self.transition();
 		}
-		
+		var pinchendHandder = function(evt){
+			if(STATE.ZOOM_LAST<=1){
+				STATE.ZOOM_LAST = 1
+				STATE.ROTATE_LAST=0;
+				STATE.X_LAST = STATE.X_TMP = 0;
+				STATE.Y_LAST = STATE.Y_TMP = 0;
+				_self.restore();
+			}
+		}
 		if(CONFIG.SCALE){
 			var pinch = new Hammer.Pinch();
 			if(CONFIG.ROTATE){
@@ -182,8 +182,8 @@
 			}else{			
 				TOUTH.add([pinch]);
 			}
-		    TOUTH.on('pinchin', pinchHandder);
-		    TOUTH.on('pinchout', pinchHandder);
+		    TOUTH.on('pinchmove', pinchHandder);
+		    TOUTH.on('pinchend', pinchendHandder);
 		}
 	}
 	//启动
@@ -204,17 +204,17 @@
 	}
 	ImgWall.prototype = {
 		//设置过渡时间
-		setTranTime:function(second){
-			ELEMENTS.WALL.style[STYLE.TRANSITION] = 'all ' + second + 's';
+		setTranTime:function(ele, second){
+			ele.style[STYLE.TRANSITION] = 'all ' + second + 's';
 		},
 		//多图模式下轻移
 		slightMove:function(offset){
-			this.setTranTime(0);
+			this.setTranTime(ELEMENTS.WALL,0);
 			ELEMENTS.WALL.style[STYLE.TRANSFORM] = 'translate('+(0-(STYLE.WIN_WIDTH*STATE.CURRENT_INDEX + offset))+'px)';
 		},
 		//切换图片
 		toIndex:function(index){
-			this.setTranTime(CONFIG.TRAN_TIME);
+			this.setTranTime(ELEMENTS.WALL,CONFIG.TRAN_TIME);
 		    index = index<0?0:index;
 		    index = index>=CONFIG.DATAS.length? CONFIG.DATAS.length-1:index;
 			STATE.CURRENT_INDEX = index;
@@ -229,6 +229,12 @@
 		},
 		//单图模式：放大、缩小、旋转、轻移
 		transition:function(){
+			this.setTranTime(ELEMENTS.IMG,0);
+			ELEMENTS.IMG.style[STYLE.TRANSFORM] ='scale(' + STATE.ZOOM_LAST + ') rotate('+ STATE.ROTATE_LAST +'deg) translateX('+ STATE.X_TMP + 'px) translateY(' + STATE.Y_TMP + 'px)';
+		},
+		//单图模式：还原
+		restore:function(){
+			this.setTranTime(ELEMENTS.IMG,CONFIG.TRAN_TIME);
 			ELEMENTS.IMG.style[STYLE.TRANSFORM] ='scale(' + STATE.ZOOM_LAST + ') rotate('+ STATE.ROTATE_LAST +'deg) translateX('+ STATE.X_TMP + 'px) translateY(' + STATE.Y_TMP + 'px)';
 		},
 		change:function(){
