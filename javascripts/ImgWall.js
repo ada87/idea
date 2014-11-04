@@ -78,10 +78,12 @@
 			document.documentElement.style.height='100%';
 		}
 		STYLE.ORGIN_OVERFLOW = document.documentElement.style.overflow;
+		document.documentElement.style.overflow = 'hidden';
 		STYLE.ORGIN_OFFSET = [document.documentElement.scrollLeft,document.documentElement.scrollTop];
 		STYLE.WIN_HEIGHT=document.documentElement.offsetHeight;
 		STYLE.WIN_WIDTH = document.documentElement.offsetWidth;
 		ELEMENTS.ROOT = document.getElementById(config.id);
+		document.documentElement.style.overflow = STYLE.ORGIN_OVERFLOW;
 	};
 	//	DOM元素构造
 	function _buildHTML(){
