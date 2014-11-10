@@ -116,6 +116,7 @@
 	}
 	function _initEvent(){
 		TOUTH = Hammer(ELEMENTS.WALL);
+		Hammer(ELEMENTS.FOOT);
 		//点击屏幕
 		var tapHandder = function(evt){
 			if(STATE.BAR_SHOW){
