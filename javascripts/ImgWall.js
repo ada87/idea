@@ -116,7 +116,10 @@
 	}
 	function _initEvent(){
 		TOUTH = Hammer(ELEMENTS.WALL);
-		Hammer(ELEMENTS.FOOT);
+		var stopEvt = Hammer(ELEMENTS.FOOT);
+	    stopEvt.on('tap', function(){
+	    	return false;
+	    });
 		//点击屏幕
 		var tapHandder = function(evt){
 			if(STATE.BAR_SHOW){
