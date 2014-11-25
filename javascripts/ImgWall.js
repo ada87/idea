@@ -115,13 +115,16 @@
 		ELEMENTS.IMG = document.getElementById('iw_img_0');
 	}
 	function _initEvent(){
-		TOUTH = Hammer(ELEMENTS.WALL);
+		TOUTH = Hammer(ELEMENTS.ROOT);
 //		var stopEvt = Hammer(ELEMENTS.FOOT);
 //	    stopEvt.on('tap', function(){
 //	    	return false;
 //	    });
 		//点击屏幕
 		var tapHandder = function(evt){
+			if(target==ELEMENTS.HEAD||target==ELEMENTS.FOOT||ELEMENTS.HEAD.hasChildNodes(target)||ELEMENTS.FOOT.hasChildNodes(target)){
+				return false;
+			}
 			if(STATE.BAR_SHOW){
 				ELEMENTS.HEAD.style.display='none';
 				ELEMENTS.FOOT.style.display='none';
